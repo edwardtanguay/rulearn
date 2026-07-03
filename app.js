@@ -500,7 +500,11 @@ window.toggleRevealLearned = function(el) {
 function renderLearnedPage() {
   // Learned Verbs
   const learnedVerbs = verbs.filter(verb => isLearned("verb", verb.id));
-  learnedVerbsTitle.textContent = `${learnedVerbs.length} Learned Verbs`;
+  const verbPct = (learnedVerbs.length / 50) * 100;
+  const verbHue = verbPct * 1.2;
+  
+  learnedVerbsTitle.textContent = `${learnedVerbs.length} of 50 verbs learned`;
+  learnedVerbsTitle.style.color = `hsl(${verbHue}, 85%, 60%)`;
   
   if (learnedVerbs.length === 0) {
     learnedVerbsListCsv.innerHTML = `<span style="color: var(--text-muted); font-style: italic;">No verbs learned yet.</span>`;
@@ -523,7 +527,11 @@ function renderLearnedPage() {
     }
   }
   
-  learnedNumbersTitle.textContent = `${learnedNums.length} Learned Numbers`;
+  const numPct = (learnedNums.length / 100) * 100;
+  const numHue = numPct * 1.2;
+  
+  learnedNumbersTitle.textContent = `${learnedNums.length} of 100 numbers learned`;
+  learnedNumbersTitle.style.color = `hsl(${numHue}, 85%, 60%)`;
 
   if (learnedNums.length === 0) {
     learnedNumbersListCsv.innerHTML = `<span style="color: var(--text-muted); font-style: italic;">No numbers learned yet.</span>`;

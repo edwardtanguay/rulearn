@@ -185,6 +185,7 @@ body {
   align-items: center;
   gap: 8px;
   transition: background-color 0.2s ease;
+  cursor: pointer;
 }
 
 .verb-card:active {
