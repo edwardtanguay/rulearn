@@ -191,6 +191,12 @@ body {
   background-color: rgba(255, 255, 255, 0.02);
 }
 
+.verb-card.row-learned {
+  background-color: rgba(16, 185, 129, 0.05) !important;
+  border-bottom-color: rgba(16, 185, 129, 0.3) !important;
+  box-shadow: inset 3px 0 0 #00ff88;
+}
+
 .verb-header {
   display: flex;
   justify-content: space-between;

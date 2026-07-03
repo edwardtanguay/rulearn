@@ -320,7 +320,7 @@ function initVerbsView() {
   verbsList.innerHTML = verbs.map(verb => {
     const isL = isLearned("verb", verb.id);
     return `
-      <div class="verb-card">
+      <div class="verb-card ${isL ? 'row-learned' : ''}">
         <div class="verb-row-left" style="display: flex; align-items: center; gap: 8px;">
           <span class="verb-number" style="background: none; padding: 0; font-size: 0.85rem; font-weight: 500;">${verb.id}.</span>
           <strong style="color: var(--text-primary); font-size: 1rem; font-weight: 600;">${verb.russian}</strong>
@@ -340,7 +340,7 @@ function initNumbersView() {
     const translateUrl = getTranslateUrl(ruSpelling);
     const isL = isLearned("number", i);
     numberCards.push(`
-      <div class="verb-card">
+      <div class="verb-card ${isL ? 'row-learned' : ''}">
         <div class="verb-row-left" style="display: flex; align-items: center; gap: 8px;">
           <span class="verb-number" style="background: none; padding: 0; font-size: 0.95rem; font-weight: 600; color: var(--text-primary);">${i}</span>
         </div>
@@ -367,6 +367,12 @@ window.toggleListItemState = function(e, type, id) {
   // Re-target button states
   const btn = e.currentTarget;
   updateToggleUI(btn, nextState);
+  
+  // Highlight row if it exists in a list
+  const card = btn.closest(".verb-card");
+  if (card) {
+    card.classList.toggle("row-learned", nextState);
+  }
   
   // If we are on the learned list page, re-render it directly
   if (pageLearned.classList.contains("active")) {
@@ -459,12 +465,15 @@ function nextTestNum() {
 // Click to reveal answer logic inside learned tags
 window.toggleRevealLearned = function(el) {
   el.classList.toggle("is-revealed");
+  const val = el.querySelector(".learned-val");
   const ans = el.querySelector(".learned-ans");
   const x = el.querySelector(".unlearn-x");
   if (el.classList.contains("is-revealed")) {
+    val.style.display = "none";
     ans.style.display = "inline";
     x.style.display = "inline-block";
   } else {
+    val.style.display = "inline";
     ans.style.display = "none";
     x.style.display = "none";
   }
@@ -483,7 +492,7 @@ function renderLearnedPage() {
     learnedVerbsListCsv.innerHTML = learnedVerbs.map(verb => `
       <span class="learned-csv-item" onclick="toggleRevealLearned(this)">
         <span class="learned-val">${verb.russian}</span>
-        <span class="learned-ans" style="display: none; color: #10b981; margin-left: 6px; font-weight: 600;">(${verb.english})</span>
+        <span class="learned-ans" style="display: none; color: #10b981; margin-left: 6px; font-weight: 600;">${verb.english}</span>
         <span class="unlearn-x" onclick="event.stopPropagation(); toggleListItemState(event, 'verb', ${verb.id});" title="unlearn" style="display: none; color: #ef4444; margin-left: 10px; cursor: pointer; font-weight: bold; font-size: 1rem; padding: 0 4px;">✖</span>
       </span>
     `).join('');
@@ -508,7 +517,7 @@ function renderLearnedPage() {
       return `
         <span class="learned-csv-item" onclick="toggleRevealLearned(this)">
           <span class="learned-val">${i}</span>
-          <span class="learned-ans" style="display: none; color: #10b981; margin-left: 6px; font-weight: 600;">(${ruSpelling})</span>
+          <span class="learned-ans" style="display: none; color: #10b981; margin-left: 6px; font-weight: 600;">${ruSpelling}</span>
           <span class="unlearn-x" onclick="event.stopPropagation(); toggleListItemState(event, 'number', ${i});" title="unlearn" style="display: none; color: #ef4444; margin-left: 10px; cursor: pointer; font-weight: bold; font-size: 1rem; padding: 0 4px;">✖</span>
         </span>
       `;
