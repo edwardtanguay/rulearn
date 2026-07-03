@@ -128,8 +128,40 @@ function updateProgressSummary() {
     if (isLearned("number", i)) learnedNumsCount++;
   }
   
-  document.getElementById("progress-verbs").textContent = `${learnedVerbsCount} of 50 learned`;
-  document.getElementById("progress-numbers").textContent = `${learnedNumsCount} of 100 learned`;
+  const verbPct = (learnedVerbsCount / 50) * 100;
+  const numPct = (learnedNumsCount / 100) * 100;
+
+  const verbHue = verbPct * 1.2;
+  const numHue = numPct * 1.2;
+
+  const verbEl = document.getElementById("progress-verbs");
+  const numEl = document.getElementById("progress-numbers");
+  const divider = document.querySelector(".progress-divider");
+
+  verbEl.textContent = `${learnedVerbsCount} of 50 learned`;
+  verbEl.style.color = `hsl(${verbHue}, 85%, 60%)`;
+
+  numEl.textContent = `${learnedNumsCount} of 100 learned`;
+  numEl.style.color = `hsl(${numHue}, 85%, 60%)`;
+
+  // Show/Hide context-dependent items
+  const activeNav = document.querySelector(".app-nav .nav-link.active");
+  if (activeNav) {
+    if (activeNav.id === "nav-verbs") {
+      verbEl.style.display = "inline";
+      numEl.style.display = "none";
+      if (divider) divider.style.display = "none";
+    } else if (activeNav.id === "nav-numbers") {
+      verbEl.style.display = "none";
+      numEl.style.display = "inline";
+      if (divider) divider.style.display = "none";
+    } else {
+      // Learned Page
+      verbEl.style.display = "inline";
+      numEl.style.display = "inline";
+      if (divider) divider.style.display = "inline";
+    }
+  }
 }
 
 // Toggle Helper UI
@@ -193,6 +225,7 @@ function setActivePage(navBtn, pageEl) {
   [pageVerbs, pageNumbers, pageLearned].forEach(page => page.classList.remove("active"));
   navBtn.classList.add("active");
   pageEl.classList.add("active");
+  updateProgressSummary();
 }
 
 // Verbs View Mode switching
