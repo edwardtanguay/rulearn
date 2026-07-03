@@ -447,3 +447,45 @@ body {
   color: var(--text-muted);
 }
 
+/* Learned Toggle & Reset styles */
+.learned-toggle {
+  background: transparent;
+  border: none;
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: var(--text-muted);
+  opacity: 0.3; /* "empty" look */
+  cursor: pointer;
+  padding: 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), color 0.2s ease, opacity 0.2s ease, filter 0.2s ease;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.learned-toggle:active {
+  transform: scale(0.8);
+}
+
+.learned-toggle.is-learned {
+  color: #10b981; /* Green checkmark */
+  opacity: 1; /* Fully opaque */
+  filter: drop-shadow(0 0 4px rgba(16, 185, 129, 0.4));
+}
+
+.card-toggle {
+  position: absolute !important;
+  top: 16px;
+  right: 16px;
+  z-index: 10;
+}
+
+.verb-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+

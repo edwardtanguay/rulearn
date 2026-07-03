@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Learn Russian - Verbs</title>
+  <title>Learn Russian</title>
   <link rel="stylesheet" href="styles.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -16,6 +16,7 @@
       <nav class="app-nav">
         <button id="nav-verbs" class="nav-link active">verbs</button>
         <button id="nav-numbers" class="nav-link">numbers</button>
+        <button id="nav-learned" class="nav-link">learned</button>
       </nav>
     </header>
 
@@ -40,11 +41,13 @@
             <div id="test-card" class="test-card">
               <div class="card-inner">
                 <div class="card-front">
+                  <button class="learned-toggle card-toggle" id="test-verb-toggle-front" title="Mark as Learned">✔</button>
                   <span class="card-label">English</span>
                   <h2 id="test-english" class="verb-meaning">to be able to</h2>
                   <span class="tap-hint">Tap to reveal</span>
                 </div>
                 <div class="card-back">
+                  <button class="learned-toggle card-toggle" id="test-verb-toggle-back" title="Mark as Learned">✔</button>
                   <span id="test-card-label" class="card-label">Russian</span>
                   <h2 id="test-russian" class="verb-cyrillic">мочь</h2>
                   <div class="pronunciation-badge">
@@ -90,11 +93,13 @@
             <div id="num-test-card" class="test-card">
               <div class="card-inner">
                 <div class="card-front">
+                  <button class="learned-toggle card-toggle" id="test-num-toggle-front" title="Mark as Learned">✔</button>
                   <span class="card-label">Number</span>
                   <h2 id="test-num-digit" class="verb-meaning" style="font-size: 3.5rem;">42</h2>
                   <span class="tap-hint">Tap to reveal</span>
                 </div>
                 <div class="card-back">
+                  <button class="learned-toggle card-toggle" id="test-num-toggle-back" title="Mark as Learned">✔</button>
                   <span id="test-num-card-label" class="card-label">Number #42</span>
                   <h2 id="test-num-spelled" class="verb-cyrillic" style="font-size: 1.8rem; margin: 10px 0;">сорок два</h2>
                   <div class="pronunciation-badge" style="background-color: transparent; border: none;">
@@ -107,6 +112,28 @@
             </div>
             <button id="btn-next-num-test" class="action-btn next-btn">Next Number</button>
           </div>
+        </div>
+      </section>
+
+      <!-- Learned Page -->
+      <section id="page-learned" class="page-section">
+        <div class="learned-header" style="margin-bottom: 12px; border-bottom: 1px solid var(--card-border); padding-bottom: 8px;">
+          <h3 style="font-size: 1.1rem; color: #10b981;">Learned Verbs</h3>
+        </div>
+        <div id="learned-verbs-list" class="verbs-list" style="margin-bottom: 24px;">
+          <!-- Learned verbs listed here -->
+        </div>
+
+        <div class="learned-header" style="margin-bottom: 12px; border-bottom: 1px solid var(--card-border); padding-bottom: 8px;">
+          <h3 style="font-size: 1.1rem; color: #10b981;">Learned Numbers</h3>
+        </div>
+        <div id="learned-numbers-list" class="verbs-list">
+          <!-- Learned numbers listed here -->
+        </div>
+
+        <div class="reset-controls" style="display: flex; justify-content: center; gap: 20px; margin-top: 32px; border-top: 1px solid var(--card-border); padding-top: 16px;">
+          <a href="#" id="btn-reset-verbs" style="color: var(--text-muted); font-size: 0.8rem; text-decoration: underline;">Reset all verbs</a>
+          <a href="#" id="btn-reset-numbers" style="color: var(--text-muted); font-size: 0.8rem; text-decoration: underline;">Reset all numbers</a>
         </div>
       </section>
     </main>

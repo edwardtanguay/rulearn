@@ -59,13 +59,15 @@ let testOrder = [];
 let currentNumTestIndex = 0;
 let testNumOrder = [];
 
-// DOM Elements
+// DOM Elements - Main Pages
 const navVerbs = document.getElementById("nav-verbs");
 const navNumbers = document.getElementById("nav-numbers");
+const navLearned = document.getElementById("nav-learned");
 const pageVerbs = document.getElementById("page-verbs");
 const pageNumbers = document.getElementById("page-numbers");
+const pageLearned = document.getElementById("page-learned");
 
-// Verbs View Elements
+// DOM Elements - Verbs View
 const btnModeLearn = document.getElementById("btn-mode-learn");
 const btnModeTest = document.getElementById("btn-mode-test");
 const viewLearn = document.getElementById("view-learn");
@@ -79,8 +81,10 @@ const testPronunciation = document.getElementById("test-pronunciation");
 const testExampleContainer = document.getElementById("test-example-container");
 const testExample = document.getElementById("test-example");
 const btnNextTest = document.getElementById("btn-next-test");
+const testVerbToggleFront = document.getElementById("test-verb-toggle-front");
+const testVerbToggleBack = document.getElementById("test-verb-toggle-back");
 
-// Numbers View Elements
+// DOM Elements - Numbers View
 const btnNumModeLearn = document.getElementById("btn-num-mode-learn");
 const btnNumModeTest = document.getElementById("btn-num-mode-test");
 const viewNumLearn = document.getElementById("view-num-learn");
@@ -92,8 +96,39 @@ const testNumCardLabel = document.getElementById("test-num-card-label");
 const testNumSpelled = document.getElementById("test-num-spelled");
 const testNumListenLink = document.getElementById("test-num-listen-link");
 const btnNextNumTest = document.getElementById("btn-next-num-test");
+const testNumToggleFront = document.getElementById("test-num-toggle-front");
+const testNumToggleBack = document.getElementById("test-num-toggle-back");
 
-// Russian Number translation helper
+// DOM Elements - Learned Page View
+const learnedVerbsList = document.getElementById("learned-verbs-list");
+const learnedNumbersList = document.getElementById("learned-numbers-list");
+const btnResetVerbs = document.getElementById("btn-reset-verbs");
+const btnResetNumbers = document.getElementById("btn-reset-numbers");
+
+// Storage Helpers
+function isLearned(type, id) {
+  return localStorage.getItem(`${type}-${id}`) === "true";
+}
+
+function setLearned(type, id, value) {
+  if (value) {
+    localStorage.setItem(`${type}-${id}`, "true");
+  } else {
+    localStorage.removeItem(`${type}-${id}`);
+  }
+}
+
+// Toggle Helper UI
+function updateToggleUI(element, state) {
+  if (state) {
+    element.classList.add("is-learned");
+  } else {
+    element.classList.remove("is-learned");
+  }
+  element.textContent = "✔";
+}
+
+// Russian Number spelling translator
 function getRussianNumber(n) {
   const ones = ["", "один", "два", "три", "четыре", "пять", "шесть", "семь", "восемь", "девять"];
   const teens = ["десять", "одиннадцать", "двенадцать", "тринадцать", "четырнадцать", "пятнадцать", "шестнадцать", "семнадцать", "восемнадцать", "девятнадцать"];
@@ -108,7 +143,7 @@ function getRussianNumber(n) {
   return ones[oneDigit] ? `${tens[tenDigit]} ${ones[oneDigit]}` : tens[tenDigit];
 }
 
-// Google Translate Link Builder
+// Google Translate URL builder
 function getTranslateUrl(text) {
   return `https://translate.google.com/?sl=ru&tl=en&text=${encodeURIComponent(text)}&op=translate`;
 }
@@ -125,26 +160,34 @@ function shuffle(array) {
 
 // Page Navigation
 navVerbs.addEventListener("click", () => {
-  navVerbs.classList.add("active");
-  navNumbers.classList.remove("active");
-  pageVerbs.classList.add("active");
-  pageNumbers.classList.remove("active");
+  setActivePage(navVerbs, pageVerbs);
+  initVerbsView();
 });
 
 navNumbers.addEventListener("click", () => {
-  navNumbers.classList.add("active");
-  navVerbs.classList.remove("active");
-  pageNumbers.classList.add("active");
-  pageVerbs.classList.remove("active");
+  setActivePage(navNumbers, pageNumbers);
   initNumbersView();
 });
 
-// Verbs View Mode Switching
+navLearned.addEventListener("click", () => {
+  setActivePage(navLearned, pageLearned);
+  renderLearnedPage();
+});
+
+function setActivePage(navBtn, pageEl) {
+  [navVerbs, navNumbers, navLearned].forEach(btn => btn.classList.remove("active"));
+  [pageVerbs, pageNumbers, pageLearned].forEach(page => page.classList.remove("active"));
+  navBtn.classList.add("active");
+  pageEl.classList.add("active");
+}
+
+// Verbs View Mode switching
 btnModeLearn.addEventListener("click", () => {
   btnModeLearn.classList.add("active");
   btnModeTest.classList.remove("active");
   viewLearn.classList.add("active");
   viewTest.classList.remove("active");
+  initVerbsView();
 });
 
 btnModeTest.addEventListener("click", () => {
@@ -155,12 +198,13 @@ btnModeTest.addEventListener("click", () => {
   startNewTest();
 });
 
-// Numbers View Mode Switching
+// Numbers View Mode switching
 btnNumModeLearn.addEventListener("click", () => {
   btnNumModeLearn.classList.add("active");
   btnNumModeTest.classList.remove("active");
   viewNumLearn.classList.add("active");
   viewNumTest.classList.remove("active");
+  initNumbersView();
 });
 
 btnNumModeTest.addEventListener("click", () => {
@@ -171,7 +215,7 @@ btnNumModeTest.addEventListener("click", () => {
   startNewNumTest();
 });
 
-// Card Interaction (Flip)
+// Card Flip Handlers
 testCard.addEventListener("click", () => {
   testCard.classList.toggle("flipped");
 });
@@ -180,7 +224,31 @@ numTestCard.addEventListener("click", () => {
   numTestCard.classList.toggle("flipped");
 });
 
-// Next Verb Button
+// Flashcard Toggle Event Handlers (prevent card flip click)
+[testVerbToggleFront, testVerbToggleBack].forEach(toggle => {
+  toggle.addEventListener("click", (e) => {
+    e.stopPropagation();
+    const verbIndex = testOrder[currentTestIndex];
+    const verb = verbs[verbIndex];
+    const nextState = !isLearned("verb", verb.id);
+    setLearned("verb", verb.id, nextState);
+    updateToggleUI(testVerbToggleFront, nextState);
+    updateToggleUI(testVerbToggleBack, nextState);
+  });
+});
+
+[testNumToggleFront, testNumToggleBack].forEach(toggle => {
+  toggle.addEventListener("click", (e) => {
+    e.stopPropagation();
+    const numValue = testNumOrder[currentNumTestIndex];
+    const nextState = !isLearned("number", numValue);
+    setLearned("number", numValue, nextState);
+    updateToggleUI(testNumToggleFront, nextState);
+    updateToggleUI(testNumToggleBack, nextState);
+  });
+});
+
+// Next Button Handlers
 btnNextTest.addEventListener("click", (e) => {
   e.stopPropagation();
   testCard.classList.remove("flipped");
@@ -189,7 +257,6 @@ btnNextTest.addEventListener("click", (e) => {
   }, 200);
 });
 
-// Next Number Button
 btnNextNumTest.addEventListener("click", (e) => {
   e.stopPropagation();
   numTestCard.classList.remove("flipped");
@@ -198,31 +265,37 @@ btnNextNumTest.addEventListener("click", (e) => {
   }, 200);
 });
 
-// Initialize Verbs Learn View
+// Render lists with Toggle support
 function initVerbsView() {
-  verbsList.innerHTML = verbs.map(verb => `
-    <div class="verb-card">
-      <div class="verb-header">
-        <div class="verb-num-eng">
-          <span class="verb-number">${verb.id}</span>
-          <span class="verb-english">${verb.english}</span>
+  verbsList.innerHTML = verbs.map(verb => {
+    const isL = isLearned("verb", verb.id);
+    return `
+      <div class="verb-card">
+        <div class="verb-header">
+          <div class="verb-num-eng">
+            <span class="verb-number">${verb.id}</span>
+            <span class="verb-english">${verb.english}</span>
+          </div>
+          <button class="learned-toggle ${isL ? 'is-learned' : ''}" onclick="toggleListItemState(event, 'verb', ${verb.id})">
+            ✔
+          </button>
         </div>
+        <div class="verb-details">
+          <span class="verb-russian">${verb.russian}</span>
+          <span class="verb-pron">${verb.pron}</span>
+        </div>
+        ${verb.example ? `<div class="verb-example-box">${verb.example}</div>` : ''}
       </div>
-      <div class="verb-details">
-        <span class="verb-russian">${verb.russian}</span>
-        <span class="verb-pron">${verb.pron}</span>
-      </div>
-      ${verb.example ? `<div class="verb-example-box">${verb.example}</div>` : ''}
-    </div>
-  `).join('');
+    `;
+  }).join('');
 }
 
-// Initialize Numbers Learn View (1 to 100)
 function initNumbersView() {
   const numberCards = [];
   for (let i = 1; i <= 100; i++) {
     const ruSpelling = getRussianNumber(i);
     const translateUrl = getTranslateUrl(ruSpelling);
+    const isL = isLearned("number", i);
     numberCards.push(`
       <div class="verb-card">
         <div class="verb-header">
@@ -230,9 +303,14 @@ function initNumbersView() {
             <span class="verb-number">${i}</span>
             <span class="verb-english">${ruSpelling}</span>
           </div>
-          <a href="${translateUrl}" target="_blank" class="listen-link" style="color: var(--accent-color); text-decoration: none; font-size: 0.85rem; font-weight: 500;">
-            🔊 Listen
-          </a>
+          <div class="verb-actions">
+            <a href="${translateUrl}" target="_blank" class="listen-link" style="color: var(--accent-color); text-decoration: none; font-size: 0.85rem; font-weight: 500;">
+              🔊 Listen
+            </a>
+            <button class="learned-toggle ${isL ? 'is-learned' : ''}" onclick="toggleListItemState(event, 'number', ${i})">
+              ✔
+            </button>
+          </div>
         </div>
       </div>
     `);
@@ -240,7 +318,23 @@ function initNumbersView() {
   numbersList.innerHTML = numberCards.join('');
 }
 
-// Start Verbs Test Mode
+// Global toggle dispatcher for in-list star buttons
+window.toggleListItemState = function(e, type, id) {
+  e.stopPropagation();
+  const nextState = !isLearned(type, id);
+  setLearned(type, id, nextState);
+  
+  // Re-target button states
+  const btn = e.currentTarget;
+  updateToggleUI(btn, nextState);
+  
+  // If we are on the learned list page, re-render it directly
+  if (pageLearned.classList.contains("active")) {
+    renderLearnedPage();
+  }
+};
+
+// Verbs Testing Logic
 function startNewTest() {
   testOrder = shuffle(verbs.map((_, index) => index));
   currentTestIndex = 0;
@@ -256,6 +350,10 @@ function loadTestVerb() {
   testCardLabel.textContent = `verb #${verb.id}`;
   testRussian.textContent = verb.russian;
   testPronunciation.textContent = verb.pron;
+
+  const isL = isLearned("verb", verb.id);
+  updateToggleUI(testVerbToggleFront, isL);
+  updateToggleUI(testVerbToggleBack, isL);
 
   if (verb.example) {
     testExampleContainer.style.display = "block";
@@ -275,7 +373,7 @@ function nextTestVerb() {
   }
 }
 
-// Start Numbers Test Mode
+// Numbers Testing Logic
 function startNewNumTest() {
   const numRange = Array.from({ length: 100 }, (_, i) => i + 1);
   testNumOrder = shuffle(numRange);
@@ -292,6 +390,10 @@ function loadTestNum() {
   testNumCardLabel.textContent = `Number #${numValue}`;
   testNumSpelled.textContent = ruSpelling;
   testNumListenLink.href = getTranslateUrl(ruSpelling);
+
+  const isL = isLearned("number", numValue);
+  updateToggleUI(testNumToggleFront, isL);
+  updateToggleUI(testNumToggleBack, isL);
 }
 
 function nextTestNum() {
@@ -303,6 +405,87 @@ function nextTestNum() {
     loadTestNum();
   }
 }
+
+// Render Learned Page Lists
+function renderLearnedPage() {
+  // Learned Verbs
+  const learnedVerbs = verbs.filter(verb => isLearned("verb", verb.id));
+  if (learnedVerbs.length === 0) {
+    learnedVerbsList.innerHTML = `<div class="verb-card" style="text-align: center; color: var(--text-muted);">No verbs learned yet.</div>`;
+  } else {
+    learnedVerbsList.innerHTML = learnedVerbs.map(verb => `
+      <div class="verb-card">
+        <div class="verb-header">
+          <div class="verb-num-eng">
+            <span class="verb-number">${verb.id}</span>
+            <span class="verb-english">${verb.english}</span>
+          </div>
+          <button class="learned-toggle is-learned" onclick="toggleListItemState(event, 'verb', ${verb.id})">
+            ✔
+          </button>
+        </div>
+        <div class="verb-details">
+          <span class="verb-russian">${verb.russian}</span>
+          <span class="verb-pron">${verb.pron}</span>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  // Learned Numbers
+  const learnedNums = [];
+  for (let i = 1; i <= 100; i++) {
+    if (isLearned("number", i)) {
+      learnedNums.push(i);
+    }
+  }
+
+  if (learnedNums.length === 0) {
+    learnedNumbersList.innerHTML = `<div class="verb-card" style="text-align: center; color: var(--text-muted);">No numbers learned yet.</div>`;
+  } else {
+    learnedNumbersList.innerHTML = learnedNums.map(i => {
+      const ruSpelling = getRussianNumber(i);
+      const translateUrl = getTranslateUrl(ruSpelling);
+      return `
+        <div class="verb-card">
+          <div class="verb-header">
+            <div class="verb-num-eng">
+              <span class="verb-number">${i}</span>
+              <span class="verb-english">${ruSpelling}</span>
+            </div>
+            <div class="verb-actions">
+              <a href="${translateUrl}" target="_blank" class="listen-link" style="color: var(--accent-color); text-decoration: none; font-size: 0.85rem; font-weight: 500;">
+                🔊 Listen
+              </a>
+              <button class="learned-toggle is-learned" onclick="toggleListItemState(event, 'number', ${i})">
+                ✔
+              </button>
+            </div>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+}
+
+// Reset Handlers
+btnResetVerbs.addEventListener("click", (e) => {
+  e.preventDefault();
+  if (confirm("Are you sure you want to reset all learned verbs?")) {
+    verbs.forEach(v => localStorage.removeItem(`verb-${v.id}`));
+    renderLearnedPage();
+  }
+});
+
+btnResetNumbers.addEventListener("click", (e) => {
+  e.preventDefault();
+  if (confirm("Are you sure you want to reset all learned numbers?")) {
+    for (let i = 1; i <= 100; i++) {
+      localStorage.removeItem(`number-${i}`);
+    }
+    renderLearnedPage();
+  }
+});
 
 // App Entry Point
 initVerbsView();
