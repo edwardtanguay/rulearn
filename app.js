@@ -230,6 +230,7 @@ function setActivePage(navBtn, pageEl) {
   navBtn.classList.add("active");
   pageEl.classList.add("active");
   updateProgressSummary();
+  localStorage.setItem("rulearn-active-tab", navBtn.id);
 }
 
 // Verbs View Mode switching
@@ -239,6 +240,7 @@ btnModeLearn.addEventListener("click", () => {
   viewLearn.classList.add("active");
   viewTest.classList.remove("active");
   initVerbsView();
+  localStorage.setItem("rulearn-verbs-mode", "learn");
 });
 
 btnModeTest.addEventListener("click", () => {
@@ -247,6 +249,7 @@ btnModeTest.addEventListener("click", () => {
   viewLearn.classList.remove("active");
   viewTest.classList.add("active");
   startNewTest();
+  localStorage.setItem("rulearn-verbs-mode", "test");
 });
 
 // Numbers View Mode switching
@@ -256,6 +259,7 @@ btnNumModeLearn.addEventListener("click", () => {
   viewNumLearn.classList.add("active");
   viewNumTest.classList.remove("active");
   initNumbersView();
+  localStorage.setItem("rulearn-numbers-mode", "learn");
 });
 
 btnNumModeTest.addEventListener("click", () => {
@@ -264,6 +268,7 @@ btnNumModeTest.addEventListener("click", () => {
   viewNumLearn.classList.remove("active");
   viewNumTest.classList.add("active");
   startNewNumTest();
+  localStorage.setItem("rulearn-numbers-mode", "test");
 });
 
 // Card Flip Handlers
@@ -588,4 +593,33 @@ btnResetNumbers.addEventListener("click", (e) => {
 
 // App Entry Point
 updateProgressSummary();
-initVerbsView();
+
+// Restore view states from localStorage
+const savedTab = localStorage.getItem("rulearn-active-tab");
+const savedVerbsMode = localStorage.getItem("rulearn-verbs-mode") || "learn";
+const savedNumbersMode = localStorage.getItem("rulearn-numbers-mode") || "learn";
+
+// Restore modes
+if (savedVerbsMode === "test") {
+  btnModeTest.click();
+} else {
+  btnModeLearn.click();
+}
+
+if (savedNumbersMode === "test") {
+  btnNumModeTest.click();
+} else {
+  btnNumModeLearn.click();
+}
+
+// Restore tab
+if (savedTab === "nav-numbers") {
+  navNumbers.click();
+} else if (savedTab === "nav-learned") {
+  navLearned.click();
+} else {
+  navVerbs.click();
+}
+
+// Fade in page after state restoration is complete
+document.body.classList.add("loaded");

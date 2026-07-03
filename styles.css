@@ -29,6 +29,12 @@ body {
   height: 100vh;
   padding: 0;
   overflow: hidden;
+  opacity: 0;
+  transition: opacity 0.8s ease-in-out;
+}
+
+body.loaded {
+  opacity: 1;
 }
 
 .app-container {
