@@ -23,12 +23,15 @@
       <nav class="app-nav">
         <button id="nav-verbs" class="nav-link active">verbs</button>
         <button id="nav-numbers" class="nav-link">numbers</button>
+        <button id="nav-days" class="nav-link">days</button>
         <button id="nav-learned" class="nav-link">learned</button>
       </nav>
       <div class="app-progress-summary">
         <span id="progress-verbs">0 of 53 verbs learned</span>
         <span class="progress-divider">•</span>
         <span id="progress-numbers">0 of 100 numbers learned</span>
+        <span class="progress-divider">•</span>
+        <span id="progress-days">0 of 7 days learned</span>
       </div>
     </header>
 
@@ -136,6 +139,49 @@
         </div>
       </section>
 
+      <!-- Days Page -->
+      <section id="page-days" class="page-section">
+        <div class="mode-selector">
+          <button id="btn-days-mode-learn" class="mode-btn active">learn</button>
+          <button id="btn-days-mode-test" class="mode-btn">test</button>
+        </div>
+
+        <!-- Learn Mode View -->
+        <div id="view-days-learn" class="view-content active">
+          <div id="days-list" class="verbs-list">
+            <!-- Dynamic list of days will go here -->
+          </div>
+        </div>
+
+        <!-- Test Mode View -->
+        <div id="view-days-test" class="view-content">
+          <div class="test-card-container">
+            <div id="days-test-card" class="test-card">
+              <div class="card-inner">
+                <div class="card-front">
+                  <button class="learned-toggle card-toggle" id="test-days-toggle-front" title="Mark as Learned"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4.5" stroke-linecap="square" stroke-linejoin="miter" style="width: 1.1rem; height: 1.1rem; display: inline-block; vertical-align: middle;"><path d="M4 12l5 5L20 6" /></svg></button>
+                  <span class="card-label">English</span>
+                  <h2 id="test-days-english" class="verb-meaning">Monday</h2>
+                  <span class="tap-hint">Tap to reveal</span>
+                </div>
+                <div class="card-back">
+                  <button class="learned-toggle card-toggle" id="test-days-toggle-back" title="Mark as Learned"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4.5" stroke-linecap="square" stroke-linejoin="miter" style="width: 1.1rem; height: 1.1rem; display: inline-block; vertical-align: middle;"><path d="M4 12l5 5L20 6" /></svg></button>
+                  <span id="test-days-card-label" class="card-label">Day of the Week</span>
+                  <h2 id="test-days-russian" class="verb-cyrillic">понедельник</h2>
+                  <div class="pronunciation-badge" style="display: inline-flex; align-items: center; gap: 8px; justify-content: center; width: auto; margin: 0 auto;">
+                    <span id="test-days-pronunciation">[ponedel'nik]</span>
+                    <a id="test-days-listen-link" href="#" target="_blank" class="listen-link" style="color: var(--accent-color); text-decoration: none; font-size: 1.1rem; line-height: 1; display: inline-flex; align-items: center; padding: 4px;">
+                      🔊
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <button id="btn-next-days-test" class="action-btn next-btn">Next Day</button>
+          </div>
+        </div>
+      </section>
+
       <!-- Learned Page -->
       <section id="page-learned" class="page-section">
         <div class="learned-section" style="margin-bottom: 24px;">
@@ -152,11 +198,19 @@
           </div>
         </div>
 
+        <div class="learned-section" style="margin-bottom: 24px;">
+          <h3 id="learned-days-title" style="font-size: 1.1rem; color: #10b981; margin-bottom: 12px; border-bottom: 1px solid var(--card-border); padding-bottom: 8px;">0 Learned Days</h3>
+          <div id="learned-days-list-csv" class="learned-list-container">
+            <!-- Badges will go here -->
+          </div>
+        </div>
+
         <div class="reset-controls" style="display: flex; flex-direction: column; align-items: center; gap: 8px; margin-top: auto; border-top: 1px solid var(--card-border); padding-top: 16px;">
           <a href="#" id="btn-reset-all" style="color: var(--text-muted); font-size: 0.85rem; text-decoration: underline; font-weight: 500;">Reset all learned state</a>
-          <div style="display: flex; gap: 20px;">
+          <div style="display: flex; gap: 20px; flex-wrap: wrap; justify-content: center;">
             <a href="#" id="btn-reset-verbs" style="color: var(--text-muted); font-size: 0.8rem; text-decoration: underline;">Reset only verbs</a>
             <a href="#" id="btn-reset-numbers" style="color: var(--text-muted); font-size: 0.8rem; text-decoration: underline;">Reset only numbers</a>
+            <a href="#" id="btn-reset-days" style="color: var(--text-muted); font-size: 0.8rem; text-decoration: underline;">Reset only days</a>
           </div>
         </div>
       </section>

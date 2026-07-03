@@ -55,6 +55,17 @@ const verbs = [
   { id: 53, english: "to drink", russian: "пить", pron: "[peet]" }
 ];
 
+// Russian Days of the Week Data
+const daysItems = [
+  { id: 1, english: "Monday", russian: "понедельник", pron: "[ponedel'nik]" },
+  { id: 2, english: "Tuesday", russian: "вторник", pron: "[vtornik]" },
+  { id: 3, english: "Wednesday", russian: "среда", pron: "[sreda]" },
+  { id: 4, english: "Thursday", russian: "четверг", pron: "[chetverg]" },
+  { id: 5, english: "Friday", russian: "пятница", pron: "[pyatnitsa]" },
+  { id: 6, english: "Saturday", russian: "суббота", pron: "[subota]" },
+  { id: 7, english: "Sunday", russian: "воскресенье", pron: "[voskresen'ye]" }
+];
+
 // Exciting sharp SVG checkmark template
 const CHECK_SVG = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4.5" stroke-linecap="square" stroke-linejoin="miter" style="width: 1.1rem; height: 1.1rem; display: inline-block; vertical-align: middle;"><path d="M4 12l5 5L20 6" /></svg>`;
 
@@ -65,12 +76,17 @@ let testOrder = [];
 let currentNumTestIndex = 0;
 let testNumOrder = [];
 
+let currentDaysTestIndex = 0;
+let testDaysOrder = [];
+
 // DOM Elements - Main Pages
 const navVerbs = document.getElementById("nav-verbs");
 const navNumbers = document.getElementById("nav-numbers");
+const navDays = document.getElementById("nav-days");
 const navLearned = document.getElementById("nav-learned");
 const pageVerbs = document.getElementById("page-verbs");
 const pageNumbers = document.getElementById("page-numbers");
+const pageDays = document.getElementById("page-days");
 const pageLearned = document.getElementById("page-learned");
 
 // DOM Elements - Verbs View
@@ -106,13 +122,32 @@ const btnNextNumTest = document.getElementById("btn-next-num-test");
 const testNumToggleFront = document.getElementById("test-num-toggle-front");
 const testNumToggleBack = document.getElementById("test-num-toggle-back");
 
+// DOM Elements - Days View
+const btnDaysModeLearn = document.getElementById("btn-days-mode-learn");
+const btnDaysModeTest = document.getElementById("btn-days-mode-test");
+const viewDaysLearn = document.getElementById("view-days-learn");
+const viewDaysTest = document.getElementById("view-days-test");
+const daysList = document.getElementById("days-list");
+const daysTestCard = document.getElementById("days-test-card");
+const testDaysEnglish = document.getElementById("test-days-english");
+const testDaysRussian = document.getElementById("test-days-russian");
+const testDaysCardLabel = document.getElementById("test-days-card-label");
+const testDaysPronunciation = document.getElementById("test-days-pronunciation");
+const testDaysListenLink = document.getElementById("test-days-listen-link");
+const btnNextDaysTest = document.getElementById("btn-next-days-test");
+const testDaysToggleFront = document.getElementById("test-days-toggle-front");
+const testDaysToggleBack = document.getElementById("test-days-toggle-back");
+
 // DOM Elements - Learned Page View
 const learnedVerbsTitle = document.getElementById("learned-verbs-title");
 const learnedVerbsListCsv = document.getElementById("learned-verbs-list-csv");
 const learnedNumbersTitle = document.getElementById("learned-numbers-title");
 const learnedNumbersListCsv = document.getElementById("learned-numbers-list-csv");
+const learnedDaysTitle = document.getElementById("learned-days-title");
+const learnedDaysListCsv = document.getElementById("learned-days-list-csv");
 const btnResetVerbs = document.getElementById("btn-reset-verbs");
 const btnResetNumbers = document.getElementById("btn-reset-numbers");
+const btnResetDays = document.getElementById("btn-reset-days");
 const btnResetAll = document.getElementById("btn-reset-all");
 
 // DOM Elements - Global Search
@@ -143,15 +178,20 @@ function updateProgressSummary() {
   for (let i = 1; i <= 100; i++) {
     if (isLearned("number", i)) learnedNumsCount++;
   }
+
+  const learnedDaysCount = daysItems.filter(d => isLearned("days", d.id)).length;
   
   const verbPct = (learnedVerbsCount / verbs.length) * 100;
   const numPct = (learnedNumsCount / 100) * 100;
+  const daysPct = (learnedDaysCount / daysItems.length) * 100;
 
   const verbHue = verbPct * 1.2;
   const numHue = numPct * 1.2;
+  const daysHue = daysPct * 1.2;
 
   const verbEl = document.getElementById("progress-verbs");
   const numEl = document.getElementById("progress-numbers");
+  const daysEl = document.getElementById("progress-days");
   const divider = document.querySelector(".progress-divider");
   const summaryContainer = document.querySelector(".app-progress-summary");
 
@@ -161,6 +201,9 @@ function updateProgressSummary() {
   numEl.textContent = `${learnedNumsCount} of 100 numbers learned`;
   numEl.style.color = `hsl(${numHue}, 85%, 60%)`;
 
+  daysEl.textContent = `${learnedDaysCount} of ${daysItems.length} days learned`;
+  daysEl.style.color = `hsl(${daysHue}, 85%, 60%)`;
+
   // Show/Hide context-dependent items
   const activeNav = document.querySelector(".app-nav .nav-link.active");
   if (activeNav && summaryContainer) {
@@ -168,11 +211,19 @@ function updateProgressSummary() {
       summaryContainer.style.display = "flex";
       verbEl.style.display = "inline-block";
       numEl.style.display = "none";
+      daysEl.style.display = "none";
       if (divider) divider.style.display = "none";
     } else if (activeNav.id === "nav-numbers") {
       summaryContainer.style.display = "flex";
       verbEl.style.display = "none";
       numEl.style.display = "inline-block";
+      daysEl.style.display = "none";
+      if (divider) divider.style.display = "none";
+    } else if (activeNav.id === "nav-days") {
+      summaryContainer.style.display = "flex";
+      verbEl.style.display = "none";
+      numEl.style.display = "none";
+      daysEl.style.display = "inline-block";
       if (divider) divider.style.display = "none";
     } else {
       // Learned Page - hide progress header entirely
@@ -236,6 +287,13 @@ navNumbers.addEventListener("click", () => {
   initNumbersView();
 });
 
+navDays.addEventListener("click", () => {
+  globalSearch.value = "";
+  pageSearchResults.classList.remove("active");
+  setActivePage(navDays, pageDays);
+  initDaysView();
+});
+
 navLearned.addEventListener("click", () => {
   globalSearch.value = "";
   pageSearchResults.classList.remove("active");
@@ -244,8 +302,8 @@ navLearned.addEventListener("click", () => {
 });
 
 function setActivePage(navBtn, pageEl) {
-  [navVerbs, navNumbers, navLearned].forEach(btn => btn.classList.remove("active"));
-  [pageVerbs, pageNumbers, pageLearned].forEach(page => page.classList.remove("active"));
+  [navVerbs, navNumbers, navDays, navLearned].forEach(btn => btn.classList.remove("active"));
+  [pageVerbs, pageNumbers, pageDays, pageLearned].forEach(page => page.classList.remove("active"));
   navBtn.classList.add("active");
   pageEl.classList.add("active");
   updateProgressSummary();
@@ -290,6 +348,25 @@ btnNumModeTest.addEventListener("click", () => {
   localStorage.setItem("rulearn-numbers-mode", "test");
 });
 
+// Days View Mode switching
+btnDaysModeLearn.addEventListener("click", () => {
+  btnDaysModeLearn.classList.add("active");
+  btnDaysModeTest.classList.remove("active");
+  viewDaysLearn.classList.add("active");
+  viewDaysTest.classList.remove("active");
+  initDaysView();
+  localStorage.setItem("rulearn-days-mode", "learn");
+});
+
+btnDaysModeTest.addEventListener("click", () => {
+  btnDaysModeTest.classList.add("active");
+  btnDaysModeLearn.classList.remove("active");
+  viewDaysLearn.classList.remove("active");
+  viewDaysTest.classList.add("active");
+  startNewDaysTest();
+  localStorage.setItem("rulearn-days-mode", "test");
+});
+
 // Card Flip Handlers
 testCard.addEventListener("click", () => {
   testCard.classList.toggle("flipped");
@@ -297,6 +374,10 @@ testCard.addEventListener("click", () => {
 
 numTestCard.addEventListener("click", () => {
   numTestCard.classList.toggle("flipped");
+});
+
+daysTestCard.addEventListener("click", () => {
+  daysTestCard.classList.toggle("flipped");
 });
 
 [testVerbToggleFront, testVerbToggleBack].forEach(toggle => {
@@ -322,6 +403,18 @@ numTestCard.addEventListener("click", () => {
   });
 });
 
+[testDaysToggleFront, testDaysToggleBack].forEach(toggle => {
+  toggle.addEventListener("click", (e) => {
+    e.stopPropagation();
+    const dayIndex = testDaysOrder[currentDaysTestIndex];
+    const day = daysItems[dayIndex];
+    const nextState = !isLearned("days", day.id);
+    setLearned("days", day.id, nextState);
+    updateToggleUI(testDaysToggleFront, nextState);
+    updateToggleUI(testDaysToggleBack, nextState);
+  });
+});
+
 // Next Button Handlers
 btnNextTest.addEventListener("click", (e) => {
   e.stopPropagation();
@@ -336,6 +429,14 @@ btnNextNumTest.addEventListener("click", (e) => {
   numTestCard.classList.remove("flipped");
   setTimeout(() => {
     nextTestNum();
+  }, 200);
+});
+
+btnNextDaysTest.addEventListener("click", (e) => {
+  e.stopPropagation();
+  daysTestCard.classList.remove("flipped");
+  setTimeout(() => {
+    nextTestDays();
   }, 200);
 });
 
@@ -391,6 +492,32 @@ function initNumbersView() {
     `);
   }
   numbersList.innerHTML = numberCards.join('');
+}
+
+function initDaysView() {
+  daysList.innerHTML = daysItems.map(day => {
+    const isL = isLearned("days", day.id);
+    const translateUrl = getTranslateUrl(day.russian);
+    return `
+      <div class="verb-card ${isL ? 'row-learned' : ''}" onclick="toggleRowState(event, 'days', ${day.id})">
+        <div class="verb-row-left" style="display: flex; align-items: baseline; gap: 8px; flex-grow: 1; min-width: 0;">
+          <span class="verb-number" style="background: none; padding: 0; font-size: 0.85rem; font-weight: 500; min-width: 24px; flex-shrink: 0;">${day.id}.</span>
+          <div style="display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px; min-width: 0;">
+            <strong style="color: var(--text-primary); font-size: 1rem; font-weight: 600; white-space: nowrap;">${day.russian}</strong>
+            <span style="color: var(--text-secondary); font-size: 0.85rem;">${day.english}</span>
+          </div>
+        </div>
+        <div class="verb-actions" style="gap: 16px; flex-shrink: 0;">
+          <a href="${translateUrl}" target="_blank" class="listen-link" onclick="event.stopPropagation();" style="color: var(--accent-color); text-decoration: none; font-size: 1.1rem; padding: 8px;">
+            🔊
+          </a>
+          <button class="learned-toggle ${isL ? 'is-learned' : ''}" style="padding: 8px 12px; pointer-events: none;">
+            ${CHECK_SVG}
+          </button>
+        </div>
+      </div>
+    `;
+  }).join('');
 }
 
 // Row toggling helper (whole card click target)
@@ -518,6 +645,47 @@ function nextTestNum() {
   }
 }
 
+// Days Testing Logic
+function startNewDaysTest() {
+  let testList = daysItems.filter(d => !isLearned("days", d.id));
+  if (testList.length === 0) {
+    alert(`You've learned all ${daysItems.length} days! Testing on all days instead.`);
+    testList = daysItems;
+  }
+  testDaysOrder = shuffle(testList.map(d => daysItems.indexOf(d)));
+  currentDaysTestIndex = 0;
+  loadTestDay();
+}
+
+function loadTestDay() {
+  daysTestCard.classList.remove("flipped");
+  const dayIndex = testDaysOrder[currentDaysTestIndex];
+  const day = daysItems[dayIndex];
+
+  testDaysEnglish.textContent = day.english;
+  testDaysCardLabel.textContent = `day #${day.id}`;
+  testDaysRussian.textContent = day.russian;
+  testDaysPronunciation.textContent = day.pron;
+  
+  if (testDaysListenLink) {
+    testDaysListenLink.href = getTranslateUrl(day.russian);
+  }
+
+  const isL = isLearned("days", day.id);
+  updateToggleUI(testDaysToggleFront, isL);
+  updateToggleUI(testDaysToggleBack, isL);
+}
+
+function nextTestDays() {
+  currentDaysTestIndex++;
+  if (currentDaysTestIndex >= testDaysOrder.length) {
+    alert("You completed the active days list! Starting another randomized run.");
+    startNewDaysTest();
+  } else {
+    loadTestDay();
+  }
+}
+
 // Click to reveal answer logic inside learned tags
 window.toggleRevealLearned = function(el) {
   el.classList.toggle("is-revealed");
@@ -587,18 +755,40 @@ function renderLearnedPage() {
       `;
     }).join('');
   }
+
+  // Learned Days
+  const learnedDays = daysItems.filter(day => isLearned("days", day.id));
+  const daysPct = (learnedDays.length / daysItems.length) * 100;
+  const daysHue = daysPct * 1.2;
+  
+  learnedDaysTitle.textContent = `${learnedDays.length} of ${daysItems.length} days learned`;
+  learnedDaysTitle.style.color = `hsl(${daysHue}, 85%, 60%)`;
+
+  if (learnedDays.length === 0) {
+    learnedDaysListCsv.innerHTML = `<span style="color: var(--text-muted); font-style: italic;">No days learned yet.</span>`;
+  } else {
+    learnedDaysListCsv.innerHTML = learnedDays.map(day => `
+      <span class="learned-csv-item" onclick="toggleRevealLearned(this)">
+        <span class="learned-val">${day.russian}</span>
+        <span class="learned-ans" style="display: none; color: #10b981; margin-left: 6px; font-weight: 600;"><span style="color: var(--text-muted); font-weight: normal; margin-right: 4px; font-size: 0.72rem;">${day.id}:</span>${day.english}</span>
+        <span class="unlearn-x" onclick="event.stopPropagation(); toggleListItemState(event, 'days', ${day.id});" title="unlearn" style="display: none; color: #ef4444; margin-left: 10px; cursor: pointer; font-weight: bold; font-size: 1rem; padding: 0 4px;">✖</span>
+      </span>
+    `).join('');
+  }
 }
 
 // Reset Handlers
 btnResetAll.addEventListener("click", (e) => {
   e.preventDefault();
-  if (confirm("Are you sure you want to reset all learned verbs AND numbers?")) {
+  if (confirm("Are you sure you want to reset all learned verbs, numbers, and days?")) {
     // Clear verbs
     verbs.forEach(v => localStorage.removeItem(`verb-${v.id}`));
     // Clear numbers
     for (let i = 1; i <= 100; i++) {
       localStorage.removeItem(`number-${i}`);
     }
+    // Clear days
+    daysItems.forEach(d => localStorage.removeItem(`days-${d.id}`));
     updateProgressSummary();
     renderLearnedPage();
   }
@@ -619,6 +809,15 @@ btnResetNumbers.addEventListener("click", (e) => {
     for (let i = 1; i <= 100; i++) {
       localStorage.removeItem(`number-${i}`);
     }
+    updateProgressSummary();
+    renderLearnedPage();
+  }
+});
+
+btnResetDays.addEventListener("click", (e) => {
+  e.preventDefault();
+  if (confirm("Are you sure you want to reset only learned days?")) {
+    daysItems.forEach(d => localStorage.removeItem(`days-${d.id}`));
     updateProgressSummary();
     renderLearnedPage();
   }
@@ -650,13 +849,15 @@ globalSearch.addEventListener("input", (e) => {
         pageVerbs.classList.add("active");
       } else if (activeNav.id === "nav-numbers") {
         pageNumbers.classList.add("active");
+      } else if (activeNav.id === "nav-days") {
+        pageDays.classList.add("active");
       } else if (activeNav.id === "nav-learned") {
         pageLearned.classList.add("active");
       }
     }
     updateProgressSummary();
   } else {
-    [pageVerbs, pageNumbers, pageLearned].forEach(page => page.classList.remove("active"));
+    [pageVerbs, pageNumbers, pageDays, pageLearned].forEach(page => page.classList.remove("active"));
     pageSearchResults.classList.add("active");
     const summaryContainer = document.querySelector(".app-progress-summary");
     if (summaryContainer) summaryContainer.style.display = "none";
@@ -678,7 +879,12 @@ function performGlobalSearch(query) {
     }
   }
 
-  const totalMatches = matchVerbs.length + matchNums.length;
+  const matchDays = daysItems.filter(d =>
+    d.russian.toLowerCase().includes(query) ||
+    d.english.toLowerCase().includes(query)
+  );
+
+  const totalMatches = matchVerbs.length + matchNums.length + matchDays.length;
   searchResultsTitle.textContent = `${totalMatches} matches found`;
 
   let html = "";
@@ -732,6 +938,31 @@ function performGlobalSearch(query) {
     `;
   });
 
+  // Days results
+  matchDays.forEach(day => {
+    const isL = isLearned("days", day.id);
+    const translateUrl = getTranslateUrl(day.russian);
+    html += `
+      <div class="verb-card ${isL ? 'row-learned' : ''}" onclick="toggleSearchRowState(event, 'days', ${day.id})">
+        <div class="verb-row-left" style="display: flex; align-items: baseline; gap: 8px; flex-grow: 1; min-width: 0;">
+          <span class="verb-number" style="background: none; padding: 0; font-size: 0.85rem; font-weight: 500; min-width: 24px; flex-shrink: 0;">D${day.id}.</span>
+          <div style="display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px; min-width: 0;">
+            <strong style="color: var(--text-primary); font-size: 1rem; font-weight: 600; white-space: nowrap;">${day.russian}</strong>
+            <span style="color: var(--text-secondary); font-size: 0.85rem;">${day.english}</span>
+          </div>
+        </div>
+        <div class="verb-actions" style="gap: 16px; flex-shrink: 0;">
+          <a href="${translateUrl}" target="_blank" class="listen-link" onclick="event.stopPropagation();" style="color: var(--accent-color); text-decoration: none; font-size: 1.1rem; padding: 8px;">
+            🔊
+          </a>
+          <button class="learned-toggle ${isL ? 'is-learned' : ''}" style="padding: 8px 12px; pointer-events: none;">
+            ${CHECK_SVG}
+          </button>
+        </div>
+      </div>
+    `;
+  });
+
   if (html === "") {
     searchResultsList.innerHTML = `<span style="color: var(--text-muted); font-style: italic; padding: 16px; display: block; text-align: center;">No matches found. Try another query!</span>`;
   } else {
@@ -746,6 +977,7 @@ updateProgressSummary();
 const savedTab = localStorage.getItem("rulearn-active-tab");
 const savedVerbsMode = localStorage.getItem("rulearn-verbs-mode") || "learn";
 const savedNumbersMode = localStorage.getItem("rulearn-numbers-mode") || "learn";
+const savedDaysMode = localStorage.getItem("rulearn-days-mode") || "learn";
 
 // Restore modes
 if (savedVerbsMode === "test") {
@@ -760,9 +992,17 @@ if (savedNumbersMode === "test") {
   btnNumModeLearn.click();
 }
 
+if (savedDaysMode === "test") {
+  btnDaysModeTest.click();
+} else {
+  btnDaysModeLearn.click();
+}
+
 // Restore tab
 if (savedTab === "nav-numbers") {
   navNumbers.click();
+} else if (savedTab === "nav-days") {
+  navDays.click();
 } else if (savedTab === "nav-learned") {
   navLearned.click();
 } else {
