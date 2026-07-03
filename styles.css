@@ -26,19 +26,20 @@ body {
   -moz-osx-font-smoothing: grayscale;
   display: flex;
   justify-content: center;
-  min-height: 100vh;
+  height: 100vh;
   padding: 0;
-  overflow-x: hidden;
+  overflow: hidden;
 }
 
 .app-container {
   width: 100%;
   max-width: 480px; /* Mobile width constraint */
-  min-height: 100vh;
+  height: 100vh;
   display: flex;
   flex-direction: column;
   background-color: var(--bg-color);
   padding: 16px;
+  overflow: hidden;
 }
 
 /* Very small title at top & simple nav menu */
@@ -93,12 +94,14 @@ body {
   flex-grow: 1;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
 }
 
 .page-section {
   display: none;
   flex-direction: column;
   flex-grow: 1;
+  overflow: hidden;
   animation: fadeIn 0.3s ease-in-out;
 }
 
@@ -146,10 +149,21 @@ body {
   display: none;
   flex-direction: column;
   flex-grow: 1;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 24px;
 }
 
 .view-content.active {
   display: flex;
+}
+
+/* Scroll lock exception for the flat learned page */
+#page-learned.page-section.active {
+  display: flex;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 24px;
 }
 
 /* Verbs List (Learn Mode) */
