@@ -321,9 +321,10 @@ function initVerbsView() {
     const isL = isLearned("verb", verb.id);
     return `
       <div class="verb-card ${isL ? 'row-learned' : ''}" onclick="toggleRowState(event, 'verb', ${verb.id})">
-        <div class="verb-row-left" style="display: flex; align-items: center; gap: 8px;">
+        <div class="verb-row-left" style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
           <span class="verb-number" style="background: none; padding: 0; font-size: 0.85rem; font-weight: 500;">${verb.id}.</span>
           <strong style="color: var(--text-primary); font-size: 1rem; font-weight: 600;">${verb.russian}</strong>
+          <span style="color: var(--text-secondary); font-size: 0.85rem; margin-left: 6px;">${verb.english}</span>
         </div>
         <button class="learned-toggle ${isL ? 'is-learned' : ''}" style="padding: 8px 12px; pointer-events: none;">
           ✔
@@ -341,8 +342,9 @@ function initNumbersView() {
     const isL = isLearned("number", i);
     numberCards.push(`
       <div class="verb-card ${isL ? 'row-learned' : ''}" onclick="toggleRowState(event, 'number', ${i})">
-        <div class="verb-row-left" style="display: flex; align-items: center; gap: 8px;">
+        <div class="verb-row-left" style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
           <span class="verb-number" style="background: none; padding: 0; font-size: 0.95rem; font-weight: 600; color: var(--text-primary);">${i}</span>
+          <span style="color: var(--text-secondary); font-size: 0.85rem; margin-left: 6px;">${ruSpelling}</span>
         </div>
         <div class="verb-actions" style="gap: 16px;">
           <a href="${translateUrl}" target="_blank" class="listen-link" onclick="event.stopPropagation();" style="color: var(--accent-color); text-decoration: none; font-size: 1.1rem; padding: 8px;">
