@@ -524,19 +524,35 @@ body {
 }
 
 /* Clickable CSV learned list items style */
+.learned-list-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 4px 0;
+}
+
 .learned-csv-item {
   cursor: pointer;
-  text-decoration: underline;
+  background-color: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--card-border);
+  border-radius: 8px;
+  padding: 6px 12px;
+  font-size: 0.85rem;
   color: var(--text-primary);
   font-weight: 500;
-  transition: color 0.15s ease;
-  padding: 2px 4px;
-  display: inline-block;
+  transition: all 0.15s ease;
+  user-select: none;
   -webkit-tap-highlight-color: transparent;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
 }
 
 .learned-csv-item:hover,
 .learned-csv-item:active {
+  background-color: rgba(239, 68, 68, 0.12);
+  border-color: rgba(239, 68, 68, 0.25);
   color: #ef4444 !important;
 }
 

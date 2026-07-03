@@ -465,12 +465,12 @@ function renderLearnedPage() {
   if (learnedVerbs.length === 0) {
     learnedVerbsListCsv.innerHTML = `<span style="color: var(--text-muted); font-style: italic;">No verbs learned yet.</span>`;
   } else {
-    // Generate inline elements with comma separators
+    // Generate inline elements without comma separators
     learnedVerbsListCsv.innerHTML = learnedVerbs.map(verb => `
       <span class="learned-csv-item" onclick="toggleListItemState(event, 'verb', ${verb.id})" title="Click to unlearn">
         ${verb.russian}
       </span>
-    `).join(', ');
+    `).join('');
   }
 
   // Learned Numbers
@@ -486,12 +486,12 @@ function renderLearnedPage() {
   if (learnedNums.length === 0) {
     learnedNumbersListCsv.innerHTML = `<span style="color: var(--text-muted); font-style: italic;">No numbers learned yet.</span>`;
   } else {
-    // Generate inline elements with comma separators
+    // Generate inline elements without comma separators
     learnedNumbersListCsv.innerHTML = learnedNums.map(i => `
       <span class="learned-csv-item" onclick="toggleListItemState(event, 'number', ${i})" title="Click to unlearn">
         ${i}
       </span>
-    `).join(', ');
+    `).join('');
   }
 }
 
