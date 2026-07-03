@@ -15,7 +15,7 @@
       <span class="app-title">learn russian</span>
       <nav class="app-nav">
         <button id="nav-verbs" class="nav-link active">verbs</button>
-        <button id="nav-about" class="nav-link">about</button>
+        <button id="nav-numbers" class="nav-link">numbers</button>
       </nav>
     </header>
 
@@ -62,11 +62,51 @@
         </div>
       </section>
 
-      <!-- About Page -->
-      <section id="page-about" class="page-section">
-        <div class="about-card">
-          <h2>About Learn Russian</h2>
-          <p class="about-text">A simple, interactive mobile application designed to help you study and test yourself on the 50 most common Russian verbs.</p>
+      <!-- Numbers Page -->
+      <section id="page-numbers" class="page-section">
+        <div class="mode-selector">
+          <button id="btn-num-mode-learn" class="mode-btn active">learn</button>
+          <button id="btn-num-mode-test" class="mode-btn">test</button>
+        </div>
+
+        <!-- Learn Mode View -->
+        <div id="view-num-learn" class="view-content active">
+          <a href="https://www.youtube.com/watch?v=aeXpCLtrVuo" target="_blank" class="video-link-card">
+            <span class="video-icon">🎥</span>
+            <div class="video-info">
+              <span class="video-tag">YouTube Video</span>
+              <span class="video-title">Russian Numbers 1-100 Pronunciation</span>
+              <span class="video-subtitle">Tap to watch the full pronunciation guide on YouTube</span>
+            </div>
+          </a>
+          <div id="numbers-list" class="verbs-list">
+            <!-- Dynamic list of numbers will go here -->
+          </div>
+        </div>
+
+        <!-- Test Mode View -->
+        <div id="view-num-test" class="view-content">
+          <div class="test-card-container">
+            <div id="num-test-card" class="test-card">
+              <div class="card-inner">
+                <div class="card-front">
+                  <span class="card-label">Number</span>
+                  <h2 id="test-num-digit" class="verb-meaning" style="font-size: 3.5rem;">42</h2>
+                  <span class="tap-hint">Tap to reveal</span>
+                </div>
+                <div class="card-back">
+                  <span id="test-num-card-label" class="card-label">Number #42</span>
+                  <h2 id="test-num-spelled" class="verb-cyrillic" style="font-size: 1.8rem; margin: 10px 0;">сорок два</h2>
+                  <div class="pronunciation-badge" style="background-color: transparent; border: none;">
+                    <a id="test-num-listen-link" href="#" target="_blank" class="listen-link" style="color: var(--accent-color); text-decoration: none; font-size: 0.95rem; font-weight: 600; display: inline-flex; align-items: center; gap: 6px;">
+                      🔊 Listen on Google Translate
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <button id="btn-next-num-test" class="action-btn next-btn">Next Number</button>
+          </div>
         </div>
       </section>
     </main>

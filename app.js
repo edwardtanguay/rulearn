@@ -56,17 +56,20 @@ const verbs = [
 let currentTestIndex = 0;
 let testOrder = [];
 
+let currentNumTestIndex = 0;
+let testNumOrder = [];
+
 // DOM Elements
 const navVerbs = document.getElementById("nav-verbs");
-const navAbout = document.getElementById("nav-about");
+const navNumbers = document.getElementById("nav-numbers");
 const pageVerbs = document.getElementById("page-verbs");
-const pageAbout = document.getElementById("page-about");
+const pageNumbers = document.getElementById("page-numbers");
 
+// Verbs View Elements
 const btnModeLearn = document.getElementById("btn-mode-learn");
 const btnModeTest = document.getElementById("btn-mode-test");
 const viewLearn = document.getElementById("view-learn");
 const viewTest = document.getElementById("view-test");
-
 const verbsList = document.getElementById("verbs-list");
 const testCard = document.getElementById("test-card");
 const testEnglish = document.getElementById("test-english");
@@ -77,22 +80,66 @@ const testExampleContainer = document.getElementById("test-example-container");
 const testExample = document.getElementById("test-example");
 const btnNextTest = document.getElementById("btn-next-test");
 
+// Numbers View Elements
+const btnNumModeLearn = document.getElementById("btn-num-mode-learn");
+const btnNumModeTest = document.getElementById("btn-num-mode-test");
+const viewNumLearn = document.getElementById("view-num-learn");
+const viewNumTest = document.getElementById("view-num-test");
+const numbersList = document.getElementById("numbers-list");
+const numTestCard = document.getElementById("num-test-card");
+const testNumDigit = document.getElementById("test-num-digit");
+const testNumCardLabel = document.getElementById("test-num-card-label");
+const testNumSpelled = document.getElementById("test-num-spelled");
+const testNumListenLink = document.getElementById("test-num-listen-link");
+const btnNextNumTest = document.getElementById("btn-next-num-test");
+
+// Russian Number translation helper
+function getRussianNumber(n) {
+  const ones = ["", "один", "два", "три", "четыре", "пять", "шесть", "семь", "восемь", "девять"];
+  const teens = ["десять", "одиннадцать", "двенадцать", "тринадцать", "четырнадцать", "пятнадцать", "шестнадцать", "семнадцать", "восемнадцать", "девятнадцать"];
+  const tens = ["", "", "двадцать", "тридцать", "сорок", "пятьдесят", "шестьдесят", "семьдесят", "восемьдесят", "девяносто"];
+  
+  if (n === 100) return "сто";
+  if (n >= 10 && n < 20) return teens[n - 10];
+  if (n < 10) return ones[n];
+  
+  const tenDigit = Math.floor(n / 10);
+  const oneDigit = n % 10;
+  return ones[oneDigit] ? `${tens[tenDigit]} ${ones[oneDigit]}` : tens[tenDigit];
+}
+
+// Google Translate Link Builder
+function getTranslateUrl(text) {
+  return `https://translate.google.com/?sl=ru&tl=en&text=${encodeURIComponent(text)}&op=translate`;
+}
+
+// Fisher-Yates Shuffle
+function shuffle(array) {
+  const newArray = [...array];
+  for (let i = newArray.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+  }
+  return newArray;
+}
+
 // Page Navigation
 navVerbs.addEventListener("click", () => {
   navVerbs.classList.add("active");
-  navAbout.classList.remove("active");
+  navNumbers.classList.remove("active");
   pageVerbs.classList.add("active");
-  pageAbout.classList.remove("active");
+  pageNumbers.classList.remove("active");
 });
 
-navAbout.addEventListener("click", () => {
-  navAbout.classList.add("active");
+navNumbers.addEventListener("click", () => {
+  navNumbers.classList.add("active");
   navVerbs.classList.remove("active");
-  pageAbout.classList.add("active");
+  pageNumbers.classList.add("active");
   pageVerbs.classList.remove("active");
+  initNumbersView();
 });
 
-// Mode Switching (Learn vs Test)
+// Verbs View Mode Switching
 btnModeLearn.addEventListener("click", () => {
   btnModeLearn.classList.add("active");
   btnModeTest.classList.remove("active");
@@ -108,23 +155,51 @@ btnModeTest.addEventListener("click", () => {
   startNewTest();
 });
 
+// Numbers View Mode Switching
+btnNumModeLearn.addEventListener("click", () => {
+  btnNumModeLearn.classList.add("active");
+  btnNumModeTest.classList.remove("active");
+  viewNumLearn.classList.add("active");
+  viewNumTest.classList.remove("active");
+});
+
+btnNumModeTest.addEventListener("click", () => {
+  btnNumModeTest.classList.add("active");
+  btnNumModeLearn.classList.remove("active");
+  viewNumLearn.classList.remove("active");
+  viewNumTest.classList.add("active");
+  startNewNumTest();
+});
+
 // Card Interaction (Flip)
 testCard.addEventListener("click", () => {
   testCard.classList.toggle("flipped");
 });
 
+numTestCard.addEventListener("click", () => {
+  numTestCard.classList.toggle("flipped");
+});
+
 // Next Verb Button
 btnNextTest.addEventListener("click", (e) => {
-  e.stopPropagation(); // Avoid triggering card flip on container
+  e.stopPropagation();
   testCard.classList.remove("flipped");
-  // Brief delay to allow rotation transition back to front before changing contents
   setTimeout(() => {
     nextTestVerb();
   }, 200);
 });
 
-// Initialize Learn View
-function initLearnView() {
+// Next Number Button
+btnNextNumTest.addEventListener("click", (e) => {
+  e.stopPropagation();
+  numTestCard.classList.remove("flipped");
+  setTimeout(() => {
+    nextTestNum();
+  }, 200);
+});
+
+// Initialize Verbs Learn View
+function initVerbsView() {
   verbsList.innerHTML = verbs.map(verb => `
     <div class="verb-card">
       <div class="verb-header">
@@ -142,25 +217,36 @@ function initLearnView() {
   `).join('');
 }
 
-// Fisher-Yates Shuffle
-function shuffle(array) {
-  const newArray = [...array];
-  for (let i = newArray.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+// Initialize Numbers Learn View (1 to 100)
+function initNumbersView() {
+  const numberCards = [];
+  for (let i = 1; i <= 100; i++) {
+    const ruSpelling = getRussianNumber(i);
+    const translateUrl = getTranslateUrl(ruSpelling);
+    numberCards.push(`
+      <div class="verb-card">
+        <div class="verb-header">
+          <div class="verb-num-eng">
+            <span class="verb-number">${i}</span>
+            <span class="verb-english">${ruSpelling}</span>
+          </div>
+          <a href="${translateUrl}" target="_blank" class="listen-link" style="color: var(--accent-color); text-decoration: none; font-size: 0.85rem; font-weight: 500;">
+            🔊 Listen
+          </a>
+        </div>
+      </div>
+    `);
   }
-  return newArray;
+  numbersList.innerHTML = numberCards.join('');
 }
 
-// Start / Reset Test Mode
+// Start Verbs Test Mode
 function startNewTest() {
-  // Generate random order of indices
   testOrder = shuffle(verbs.map((_, index) => index));
   currentTestIndex = 0;
   loadTestVerb();
 }
 
-// Load a specific verb into the card view
 function loadTestVerb() {
   testCard.classList.remove("flipped");
   const verbIndex = testOrder[currentTestIndex];
@@ -179,11 +265,9 @@ function loadTestVerb() {
   }
 }
 
-// Advance to next verb in test mode
 function nextTestVerb() {
   currentTestIndex++;
   if (currentTestIndex >= verbs.length) {
-    // If all completed, reshuffle and start over
     alert("You completed all 50 verbs! Starting another randomized test run.");
     startNewTest();
   } else {
@@ -191,5 +275,34 @@ function nextTestVerb() {
   }
 }
 
+// Start Numbers Test Mode
+function startNewNumTest() {
+  const numRange = Array.from({ length: 100 }, (_, i) => i + 1);
+  testNumOrder = shuffle(numRange);
+  currentNumTestIndex = 0;
+  loadTestNum();
+}
+
+function loadTestNum() {
+  numTestCard.classList.remove("flipped");
+  const numValue = testNumOrder[currentNumTestIndex];
+  const ruSpelling = getRussianNumber(numValue);
+
+  testNumDigit.textContent = numValue;
+  testNumCardLabel.textContent = `Number #${numValue}`;
+  testNumSpelled.textContent = ruSpelling;
+  testNumListenLink.href = getTranslateUrl(ruSpelling);
+}
+
+function nextTestNum() {
+  currentNumTestIndex++;
+  if (currentNumTestIndex >= testNumOrder.length) {
+    alert("You completed all numbers! Starting another randomized test run.");
+    startNewNumTest();
+  } else {
+    loadTestNum();
+  }
+}
+
 // App Entry Point
-initLearnView();
+initVerbsView();
