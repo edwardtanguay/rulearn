@@ -49,7 +49,8 @@ const verbs = [
   { id: 47, english: "to find out", russian: "узнать", pron: "[ooz-NAHT]" },
   { id: 48, english: "to arrive", russian: "прийти", pron: "[PREE-ee-tee]" },
   { id: 49, english: "to walk", russian: "ходить", pron: "[*AH-deet]" },
-  { id: 50, english: "to notice", russian: "заметить", pron: "[zahm-YEH-tit]" }
+  { id: 50, english: "to notice", russian: "заметить", pron: "[zahm-YEH-tit]" },
+  { id: 51, english: "to read", russian: "читать", pron: "[chee-TAHT]" }
 ];
 
 // App State
@@ -138,7 +139,7 @@ function updateProgressSummary() {
     if (isLearned("number", i)) learnedNumsCount++;
   }
   
-  const verbPct = (learnedVerbsCount / 50) * 100;
+  const verbPct = (learnedVerbsCount / verbs.length) * 100;
   const numPct = (learnedNumsCount / 100) * 100;
 
   const verbHue = verbPct * 1.2;
@@ -149,7 +150,7 @@ function updateProgressSummary() {
   const divider = document.querySelector(".progress-divider");
   const summaryContainer = document.querySelector(".app-progress-summary");
 
-  verbEl.textContent = `${learnedVerbsCount} of 50 verbs learned`;
+  verbEl.textContent = `${learnedVerbsCount} of ${verbs.length} verbs learned`;
   verbEl.style.color = `hsl(${verbHue}, 85%, 60%)`;
 
   numEl.textContent = `${learnedNumsCount} of 100 numbers learned`;
@@ -430,7 +431,7 @@ window.toggleListItemState = function(e, type, id) {
 function startNewTest() {
   let testList = verbs.filter(v => !isLearned("verb", v.id));
   if (testList.length === 0) {
-    alert("You've learned all 50 verbs! Testing on all verbs instead.");
+    alert(`You've learned all ${verbs.length} verbs! Testing on all verbs instead.`);
     testList = verbs;
   }
   testOrder = shuffle(testList.map(v => verbs.indexOf(v)));
@@ -533,10 +534,10 @@ window.toggleRevealLearned = function(el) {
 function renderLearnedPage() {
   // Learned Verbs
   const learnedVerbs = verbs.filter(verb => isLearned("verb", verb.id));
-  const verbPct = (learnedVerbs.length / 50) * 100;
+  const verbPct = (learnedVerbs.length / verbs.length) * 100;
   const verbHue = verbPct * 1.2;
   
-  learnedVerbsTitle.textContent = `${learnedVerbs.length} of 50 verbs learned`;
+  learnedVerbsTitle.textContent = `${learnedVerbs.length} of ${verbs.length} verbs learned`;
   learnedVerbsTitle.style.color = `hsl(${verbHue}, 85%, 60%)`;
   
   if (learnedVerbs.length === 0) {
