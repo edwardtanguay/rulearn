@@ -139,6 +139,7 @@ function updateProgressSummary() {
   const verbEl = document.getElementById("progress-verbs");
   const numEl = document.getElementById("progress-numbers");
   const divider = document.querySelector(".progress-divider");
+  const summaryContainer = document.querySelector(".app-progress-summary");
 
   verbEl.textContent = `${learnedVerbsCount} of 50 verbs learned`;
   verbEl.style.color = `hsl(${verbHue}, 85%, 60%)`;
@@ -148,14 +149,19 @@ function updateProgressSummary() {
 
   // Show/Hide context-dependent items
   const activeNav = document.querySelector(".app-nav .nav-link.active");
-  const summaryContainer = document.querySelector(".app-progress-summary");
   if (activeNav && summaryContainer) {
-    if (activeNav.id === "nav-learned") {
+    if (activeNav.id === "nav-verbs") {
       summaryContainer.style.display = "flex";
-      verbEl.style.display = "inline";
-      numEl.style.display = "inline";
-      if (divider) divider.style.display = "inline";
+      verbEl.style.display = "inline-block";
+      numEl.style.display = "none";
+      if (divider) divider.style.display = "none";
+    } else if (activeNav.id === "nav-numbers") {
+      summaryContainer.style.display = "flex";
+      verbEl.style.display = "none";
+      numEl.style.display = "inline-block";
+      if (divider) divider.style.display = "none";
     } else {
+      // Learned Page - hide progress header entirely
       summaryContainer.style.display = "none";
     }
   }
