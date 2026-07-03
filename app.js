@@ -15,12 +15,12 @@ const verbs = [
   { id: 13, english: "to live", russian: "жить", pron: "[*EET]" },
   { id: 14, english: "to watch", russian: "смотреть", pron: "[smoht-RAYT]" },
   { id: 15, english: "to have", russian: "иметь", pron: "[EE-myit]" },
-  { id: 16, english: "to understand (perfective)", russian: "понять", pron: "[POHN-yet]" },
+  { id: 16, english: "to understand (perf.)", russian: "понять", pron: "[POHN-yet]" },
   { id: 17, english: "to sit", russian: "сидеть", pron: "[SEE-dyit]" },
   { id: 18, english: "to make/do", russian: "делать", pron: "[DYEH-lit]" },
-  { id: 19, english: "to make/do and finish it", russian: "сделать", pron: "[ZDYEH-lit]" },
+  { id: 19, english: "to make/do & finish", russian: "сделать", pron: "[ZDYEH-lit]" },
   { id: 20, english: "to take", russian: "взять", pron: "[VZYET]" },
-  { id: 21, english: "to understand (imperfective)", russian: "понимать", pron: "[pohn-yah-MAHT]", example: "я понимаю [pohn-yah-MIGH-yoo]" },
+  { id: 21, english: "to understand (imp.)", russian: "понимать", pron: "[pohn-yah-MAHT]", example: "я понимаю [pohn-yah-MIGH-yoo]" },
   { id: 22, english: "to seem/appear", russian: "казаться", pron: "[koh-ZAHT-tsyah]" },
   { id: 23, english: "to start", russian: "начать", pron: "[nah-CHAHT]" },
   { id: 24, english: "to see", russian: "увидеть", pron: "[oo-VEE-dyit]" },
@@ -315,20 +315,27 @@ btnNextNumTest.addEventListener("click", (e) => {
   }, 200);
 });
 
-// Render lists with Toggle support
 function initVerbsView() {
   verbsList.innerHTML = verbs.map(verb => {
     const isL = isLearned("verb", verb.id);
+    const translateUrl = getTranslateUrl(verb.russian);
     return `
       <div class="verb-card ${isL ? 'row-learned' : ''}" onclick="toggleRowState(event, 'verb', ${verb.id})">
-        <div class="verb-row-left" style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
-          <span class="verb-number" style="background: none; padding: 0; font-size: 0.85rem; font-weight: 500;">${verb.id}.</span>
-          <strong style="color: var(--text-primary); font-size: 1rem; font-weight: 600;">${verb.russian}</strong>
-          <span style="color: var(--text-secondary); font-size: 0.85rem; margin-left: 6px;">${verb.english}</span>
+        <div class="verb-row-left" style="display: flex; align-items: baseline; gap: 8px; flex-grow: 1; min-width: 0;">
+          <span class="verb-number" style="background: none; padding: 0; font-size: 0.85rem; font-weight: 500; min-width: 24px; flex-shrink: 0;">${verb.id}.</span>
+          <div style="display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px; min-width: 0;">
+            <strong style="color: var(--text-primary); font-size: 1rem; font-weight: 600; white-space: nowrap;">${verb.russian}</strong>
+            <span style="color: var(--text-secondary); font-size: 0.85rem;">${verb.english}</span>
+          </div>
         </div>
-        <button class="learned-toggle ${isL ? 'is-learned' : ''}" style="padding: 8px 12px; pointer-events: none;">
-          ✔
-        </button>
+        <div class="verb-actions" style="gap: 16px; flex-shrink: 0;">
+          <a href="${translateUrl}" target="_blank" class="listen-link" onclick="event.stopPropagation();" style="color: var(--accent-color); text-decoration: none; font-size: 1.1rem; padding: 8px;">
+            🔊
+          </a>
+          <button class="learned-toggle ${isL ? 'is-learned' : ''}" style="padding: 8px 12px; pointer-events: none;">
+            ✔
+          </button>
+        </div>
       </div>
     `;
   }).join('');
@@ -342,11 +349,13 @@ function initNumbersView() {
     const isL = isLearned("number", i);
     numberCards.push(`
       <div class="verb-card ${isL ? 'row-learned' : ''}" onclick="toggleRowState(event, 'number', ${i})">
-        <div class="verb-row-left" style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
-          <span class="verb-number" style="background: none; padding: 0; font-size: 0.95rem; font-weight: 600; color: var(--text-primary);">${i}</span>
-          <span style="color: var(--text-secondary); font-size: 0.85rem; margin-left: 6px;">${ruSpelling}</span>
+        <div class="verb-row-left" style="display: flex; align-items: baseline; gap: 8px; flex-grow: 1; min-width: 0;">
+          <span class="verb-number" style="background: none; padding: 0; font-size: 0.95rem; font-weight: 600; color: var(--text-primary); min-width: 24px; flex-shrink: 0;">${i}</span>
+          <div style="display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px; min-width: 0;">
+            <span style="color: var(--text-secondary); font-size: 0.85rem;">${ruSpelling}</span>
+          </div>
         </div>
-        <div class="verb-actions" style="gap: 16px;">
+        <div class="verb-actions" style="gap: 16px; flex-shrink: 0;">
           <a href="${translateUrl}" target="_blank" class="listen-link" onclick="event.stopPropagation();" style="color: var(--accent-color); text-decoration: none; font-size: 1.1rem; padding: 8px;">
             🔊
           </a>
