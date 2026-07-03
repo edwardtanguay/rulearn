@@ -523,4 +523,21 @@ body {
   opacity: 0.5;
 }
 
+/* Clickable CSV learned list items style */
+.learned-csv-item {
+  cursor: pointer;
+  text-decoration: underline;
+  color: var(--text-primary);
+  font-weight: 500;
+  transition: color 0.15s ease;
+  padding: 2px 4px;
+  display: inline-block;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.learned-csv-item:hover,
+.learned-csv-item:active {
+  color: #ef4444 !important;
+}
+
 

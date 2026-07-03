@@ -148,20 +148,15 @@ function updateProgressSummary() {
 
   // Show/Hide context-dependent items
   const activeNav = document.querySelector(".app-nav .nav-link.active");
-  if (activeNav) {
-    if (activeNav.id === "nav-verbs") {
-      verbEl.style.display = "inline";
-      numEl.style.display = "none";
-      if (divider) divider.style.display = "none";
-    } else if (activeNav.id === "nav-numbers") {
-      verbEl.style.display = "none";
-      numEl.style.display = "inline";
-      if (divider) divider.style.display = "none";
-    } else {
-      // Learned Page
+  const summaryContainer = document.querySelector(".app-progress-summary");
+  if (activeNav && summaryContainer) {
+    if (activeNav.id === "nav-learned") {
+      summaryContainer.style.display = "flex";
       verbEl.style.display = "inline";
       numEl.style.display = "inline";
       if (divider) divider.style.display = "inline";
+    } else {
+      summaryContainer.style.display = "none";
     }
   }
 }
@@ -466,7 +461,7 @@ function renderLearnedPage() {
   } else {
     // Generate inline elements with comma separators
     learnedVerbsListCsv.innerHTML = learnedVerbs.map(verb => `
-      <span class="learned-csv-item" onclick="toggleListItemState(event, 'verb', ${verb.id})" style="cursor: pointer; text-decoration: underline; color: #10b981; font-weight: 500; transition: opacity 0.2s;" title="Click to unlearn">
+      <span class="learned-csv-item" onclick="toggleListItemState(event, 'verb', ${verb.id})" title="Click to unlearn">
         ${verb.russian}
       </span>
     `).join(', ');
@@ -487,7 +482,7 @@ function renderLearnedPage() {
   } else {
     // Generate inline elements with comma separators
     learnedNumbersListCsv.innerHTML = learnedNums.map(i => `
-      <span class="learned-csv-item" onclick="toggleListItemState(event, 'number', ${i})" style="cursor: pointer; text-decoration: underline; color: #10b981; font-weight: 500; transition: opacity 0.2s;" title="Click to unlearn">
+      <span class="learned-csv-item" onclick="toggleListItemState(event, 'number', ${i})" title="Click to unlearn">
         ${i}
       </span>
     `).join(', ');
