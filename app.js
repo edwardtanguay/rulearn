@@ -66,6 +66,22 @@ const daysItems = [
   { id: 7, english: "Sunday", russian: "воскресенье", pron: "[voskresen'ye]" }
 ];
 
+// Russian Months of the Year Data
+const monthsItems = [
+  { id: 1, english: "January", russian: "январь", pron: "[yanvar']" },
+  { id: 2, english: "February", russian: "февраль", pron: "[fevral']" },
+  { id: 3, english: "March", russian: "март", pron: "[mart]" },
+  { id: 4, english: "April", russian: "апрель", pron: "[aprel']" },
+  { id: 5, english: "May", russian: "май", pron: "[may]" },
+  { id: 6, english: "June", russian: "июнь", pron: "[iyun']" },
+  { id: 7, english: "July", russian: "июль", pron: "[iyul']" },
+  { id: 8, english: "August", russian: "август", pron: "[avgust]" },
+  { id: 9, english: "September", russian: "сентябрь", pron: "[sentyabr']" },
+  { id: 10, english: "October", russian: "октябрь", pron: "[oktyabr']" },
+  { id: 11, english: "November", russian: "ноябрь", pron: "[noyabr']" },
+  { id: 12, english: "December", russian: "декабрь", pron: "[dekabr']" }
+];
+
 // Exciting sharp SVG checkmark template
 const CHECK_SVG = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4.5" stroke-linecap="square" stroke-linejoin="miter" style="width: 1.1rem; height: 1.1rem; display: inline-block; vertical-align: middle;"><path d="M4 12l5 5L20 6" /></svg>`;
 
@@ -79,14 +95,19 @@ let testNumOrder = [];
 let currentDaysTestIndex = 0;
 let testDaysOrder = [];
 
+let currentMonthsTestIndex = 0;
+let testMonthsOrder = [];
+
 // DOM Elements - Main Pages
 const navVerbs = document.getElementById("nav-verbs");
 const navNumbers = document.getElementById("nav-numbers");
 const navDays = document.getElementById("nav-days");
+const navMonths = document.getElementById("nav-months");
 const navLearned = document.getElementById("nav-learned");
 const pageVerbs = document.getElementById("page-verbs");
 const pageNumbers = document.getElementById("page-numbers");
 const pageDays = document.getElementById("page-days");
+const pageMonths = document.getElementById("page-months");
 const pageLearned = document.getElementById("page-learned");
 
 // DOM Elements - Verbs View
@@ -138,6 +159,22 @@ const btnNextDaysTest = document.getElementById("btn-next-days-test");
 const testDaysToggleFront = document.getElementById("test-days-toggle-front");
 const testDaysToggleBack = document.getElementById("test-days-toggle-back");
 
+// DOM Elements - Months View
+const btnMonthsModeLearn = document.getElementById("btn-months-mode-learn");
+const btnMonthsModeTest = document.getElementById("btn-months-mode-test");
+const viewMonthsLearn = document.getElementById("view-months-learn");
+const viewMonthsTest = document.getElementById("view-months-test");
+const monthsList = document.getElementById("months-list");
+const monthsTestCard = document.getElementById("months-test-card");
+const testMonthsEnglish = document.getElementById("test-months-english");
+const testMonthsRussian = document.getElementById("test-months-russian");
+const testMonthsCardLabel = document.getElementById("test-months-card-label");
+const testMonthsPronunciation = document.getElementById("test-months-pronunciation");
+const testMonthsListenLink = document.getElementById("test-months-listen-link");
+const btnNextMonthsTest = document.getElementById("btn-next-months-test");
+const testMonthsToggleFront = document.getElementById("test-months-toggle-front");
+const testMonthsToggleBack = document.getElementById("test-months-toggle-back");
+
 // DOM Elements - Learned Page View
 const learnedVerbsTitle = document.getElementById("learned-verbs-title");
 const learnedVerbsListCsv = document.getElementById("learned-verbs-list-csv");
@@ -145,9 +182,12 @@ const learnedNumbersTitle = document.getElementById("learned-numbers-title");
 const learnedNumbersListCsv = document.getElementById("learned-numbers-list-csv");
 const learnedDaysTitle = document.getElementById("learned-days-title");
 const learnedDaysListCsv = document.getElementById("learned-days-list-csv");
+const learnedMonthsTitle = document.getElementById("learned-months-title");
+const learnedMonthsListCsv = document.getElementById("learned-months-list-csv");
 const btnResetVerbs = document.getElementById("btn-reset-verbs");
 const btnResetNumbers = document.getElementById("btn-reset-numbers");
 const btnResetDays = document.getElementById("btn-reset-days");
+const btnResetMonths = document.getElementById("btn-reset-months");
 const btnResetAll = document.getElementById("btn-reset-all");
 
 // DOM Elements - Global Search
@@ -180,19 +220,22 @@ function updateProgressSummary() {
   }
 
   const learnedDaysCount = daysItems.filter(d => isLearned("days", d.id)).length;
+  const learnedMonthsCount = monthsItems.filter(m => isLearned("months", m.id)).length;
   
   const verbPct = (learnedVerbsCount / verbs.length) * 100;
   const numPct = (learnedNumsCount / 100) * 100;
   const daysPct = (learnedDaysCount / daysItems.length) * 100;
+  const monthsPct = (learnedMonthsCount / monthsItems.length) * 100;
 
   const verbHue = verbPct * 1.2;
   const numHue = numPct * 1.2;
   const daysHue = daysPct * 1.2;
+  const monthsHue = monthsPct * 1.2;
 
   const verbEl = document.getElementById("progress-verbs");
   const numEl = document.getElementById("progress-numbers");
   const daysEl = document.getElementById("progress-days");
-  const divider = document.querySelector(".progress-divider");
+  const monthsEl = document.getElementById("progress-months");
   const summaryContainer = document.querySelector(".app-progress-summary");
 
   verbEl.textContent = `${learnedVerbsCount} of ${verbs.length} verbs learned`;
@@ -204,6 +247,9 @@ function updateProgressSummary() {
   daysEl.textContent = `${learnedDaysCount} of ${daysItems.length} days learned`;
   daysEl.style.color = `hsl(${daysHue}, 85%, 60%)`;
 
+  monthsEl.textContent = `${learnedMonthsCount} of ${monthsItems.length} months learned`;
+  monthsEl.style.color = `hsl(${monthsHue}, 85%, 60%)`;
+
   // Show/Hide context-dependent items
   const activeNav = document.querySelector(".app-nav .nav-link.active");
   if (activeNav && summaryContainer) {
@@ -212,19 +258,25 @@ function updateProgressSummary() {
       verbEl.style.display = "inline-block";
       numEl.style.display = "none";
       daysEl.style.display = "none";
-      if (divider) divider.style.display = "none";
+      monthsEl.style.display = "none";
     } else if (activeNav.id === "nav-numbers") {
       summaryContainer.style.display = "flex";
       verbEl.style.display = "none";
       numEl.style.display = "inline-block";
       daysEl.style.display = "none";
-      if (divider) divider.style.display = "none";
+      monthsEl.style.display = "none";
     } else if (activeNav.id === "nav-days") {
       summaryContainer.style.display = "flex";
       verbEl.style.display = "none";
       numEl.style.display = "none";
       daysEl.style.display = "inline-block";
-      if (divider) divider.style.display = "none";
+      monthsEl.style.display = "none";
+    } else if (activeNav.id === "nav-months") {
+      summaryContainer.style.display = "flex";
+      verbEl.style.display = "none";
+      numEl.style.display = "none";
+      daysEl.style.display = "none";
+      monthsEl.style.display = "inline-block";
     } else {
       // Learned Page - hide progress header entirely
       summaryContainer.style.display = "none";
@@ -294,6 +346,13 @@ navDays.addEventListener("click", () => {
   initDaysView();
 });
 
+navMonths.addEventListener("click", () => {
+  globalSearch.value = "";
+  pageSearchResults.classList.remove("active");
+  setActivePage(navMonths, pageMonths);
+  initMonthsView();
+});
+
 navLearned.addEventListener("click", () => {
   globalSearch.value = "";
   pageSearchResults.classList.remove("active");
@@ -302,8 +361,8 @@ navLearned.addEventListener("click", () => {
 });
 
 function setActivePage(navBtn, pageEl) {
-  [navVerbs, navNumbers, navDays, navLearned].forEach(btn => btn.classList.remove("active"));
-  [pageVerbs, pageNumbers, pageDays, pageLearned].forEach(page => page.classList.remove("active"));
+  [navVerbs, navNumbers, navDays, navMonths, navLearned].forEach(btn => btn.classList.remove("active"));
+  [pageVerbs, pageNumbers, pageDays, pageMonths, pageLearned].forEach(page => page.classList.remove("active"));
   navBtn.classList.add("active");
   pageEl.classList.add("active");
   updateProgressSummary();
@@ -367,6 +426,25 @@ btnDaysModeTest.addEventListener("click", () => {
   localStorage.setItem("rulearn-days-mode", "test");
 });
 
+// Months View Mode switching
+btnMonthsModeLearn.addEventListener("click", () => {
+  btnMonthsModeLearn.classList.add("active");
+  btnMonthsModeTest.classList.remove("active");
+  viewMonthsLearn.classList.add("active");
+  viewMonthsTest.classList.remove("active");
+  initMonthsView();
+  localStorage.setItem("rulearn-months-mode", "learn");
+});
+
+btnMonthsModeTest.addEventListener("click", () => {
+  btnMonthsModeTest.classList.add("active");
+  btnMonthsModeLearn.classList.remove("active");
+  viewMonthsLearn.classList.remove("active");
+  viewMonthsTest.classList.add("active");
+  startNewMonthsTest();
+  localStorage.setItem("rulearn-months-mode", "test");
+});
+
 // Card Flip Handlers
 testCard.addEventListener("click", () => {
   testCard.classList.toggle("flipped");
@@ -378,6 +456,10 @@ numTestCard.addEventListener("click", () => {
 
 daysTestCard.addEventListener("click", () => {
   daysTestCard.classList.toggle("flipped");
+});
+
+monthsTestCard.addEventListener("click", () => {
+  monthsTestCard.classList.toggle("flipped");
 });
 
 [testVerbToggleFront, testVerbToggleBack].forEach(toggle => {
@@ -415,6 +497,18 @@ daysTestCard.addEventListener("click", () => {
   });
 });
 
+[testMonthsToggleFront, testMonthsToggleBack].forEach(toggle => {
+  toggle.addEventListener("click", (e) => {
+    e.stopPropagation();
+    const monthIndex = testMonthsOrder[currentMonthsTestIndex];
+    const month = monthsItems[monthIndex];
+    const nextState = !isLearned("months", month.id);
+    setLearned("months", month.id, nextState);
+    updateToggleUI(testMonthsToggleFront, nextState);
+    updateToggleUI(testMonthsToggleBack, nextState);
+  });
+});
+
 // Next Button Handlers
 btnNextTest.addEventListener("click", (e) => {
   e.stopPropagation();
@@ -437,6 +531,14 @@ btnNextDaysTest.addEventListener("click", (e) => {
   daysTestCard.classList.remove("flipped");
   setTimeout(() => {
     nextTestDays();
+  }, 200);
+});
+
+btnNextMonthsTest.addEventListener("click", (e) => {
+  e.stopPropagation();
+  monthsTestCard.classList.remove("flipped");
+  setTimeout(() => {
+    nextTestMonths();
   }, 200);
 });
 
@@ -505,6 +607,32 @@ function initDaysView() {
           <div style="display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px; min-width: 0;">
             <strong style="color: var(--text-primary); font-size: 1rem; font-weight: 600; white-space: nowrap;">${day.russian}</strong>
             <span style="color: var(--text-secondary); font-size: 0.85rem;">${day.english}</span>
+          </div>
+        </div>
+        <div class="verb-actions" style="gap: 16px; flex-shrink: 0;">
+          <a href="${translateUrl}" target="_blank" class="listen-link" onclick="event.stopPropagation();" style="color: var(--accent-color); text-decoration: none; font-size: 1.1rem; padding: 8px;">
+            🔊
+          </a>
+          <button class="learned-toggle ${isL ? 'is-learned' : ''}" style="padding: 8px 12px; pointer-events: none;">
+            ${CHECK_SVG}
+          </button>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function initMonthsView() {
+  monthsList.innerHTML = monthsItems.map(month => {
+    const isL = isLearned("months", month.id);
+    const translateUrl = getTranslateUrl(month.russian);
+    return `
+      <div class="verb-card ${isL ? 'row-learned' : ''}" onclick="toggleRowState(event, 'months', ${month.id})">
+        <div class="verb-row-left" style="display: flex; align-items: baseline; gap: 8px; flex-grow: 1; min-width: 0;">
+          <span class="verb-number" style="background: none; padding: 0; font-size: 0.85rem; font-weight: 500; min-width: 24px; flex-shrink: 0;">${month.id}.</span>
+          <div style="display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px; min-width: 0;">
+            <strong style="color: var(--text-primary); font-size: 1rem; font-weight: 600; white-space: nowrap;">${month.russian}</strong>
+            <span style="color: var(--text-secondary); font-size: 0.85rem;">${month.english}</span>
           </div>
         </div>
         <div class="verb-actions" style="gap: 16px; flex-shrink: 0;">
@@ -686,6 +814,47 @@ function nextTestDays() {
   }
 }
 
+// Months Testing Logic
+function startNewMonthsTest() {
+  let testList = monthsItems.filter(m => !isLearned("months", m.id));
+  if (testList.length === 0) {
+    alert(`You've learned all ${monthsItems.length} months! Testing on all months instead.`);
+    testList = monthsItems;
+  }
+  testMonthsOrder = shuffle(testList.map(m => monthsItems.indexOf(m)));
+  currentMonthsTestIndex = 0;
+  loadTestMonth();
+}
+
+function loadTestMonth() {
+  monthsTestCard.classList.remove("flipped");
+  const monthIndex = testMonthsOrder[currentMonthsTestIndex];
+  const month = monthsItems[monthIndex];
+
+  testMonthsEnglish.textContent = month.english;
+  testMonthsCardLabel.textContent = `month #${month.id}`;
+  testMonthsRussian.textContent = month.russian;
+  testMonthsPronunciation.textContent = month.pron;
+  
+  if (testMonthsListenLink) {
+    testMonthsListenLink.href = getTranslateUrl(month.russian);
+  }
+
+  const isL = isLearned("months", month.id);
+  updateToggleUI(testMonthsToggleFront, isL);
+  updateToggleUI(testMonthsToggleBack, isL);
+}
+
+function nextTestMonths() {
+  currentMonthsTestIndex++;
+  if (currentMonthsTestIndex >= testMonthsOrder.length) {
+    alert("You completed the active months list! Starting another randomized run.");
+    startNewMonthsTest();
+  } else {
+    loadTestMonth();
+  }
+}
+
 // Click to reveal answer logic inside learned tags
 window.toggleRevealLearned = function(el) {
   el.classList.toggle("is-revealed");
@@ -775,12 +944,32 @@ function renderLearnedPage() {
       </span>
     `).join('');
   }
+
+  // Learned Months
+  const learnedMonths = monthsItems.filter(month => isLearned("months", month.id));
+  const monthsPct = (learnedMonths.length / monthsItems.length) * 100;
+  const monthsHue = monthsPct * 1.2;
+
+  learnedMonthsTitle.textContent = `${learnedMonths.length} of ${monthsItems.length} months learned`;
+  learnedMonthsTitle.style.color = `hsl(${monthsHue}, 85%, 60%)`;
+
+  if (learnedMonths.length === 0) {
+    learnedMonthsListCsv.innerHTML = `<span style="color: var(--text-muted); font-style: italic;">No months learned yet.</span>`;
+  } else {
+    learnedMonthsListCsv.innerHTML = learnedMonths.map(month => `
+      <span class="learned-csv-item" onclick="toggleRevealLearned(this)">
+        <span class="learned-val">${month.russian}</span>
+        <span class="learned-ans" style="display: none; color: #10b981; margin-left: 6px; font-weight: 600;"><span style="color: var(--text-muted); font-weight: normal; margin-right: 4px; font-size: 0.72rem;">${month.id}:</span>${month.english}</span>
+        <span class="unlearn-x" onclick="event.stopPropagation(); toggleListItemState(event, 'months', ${month.id});" title="unlearn" style="display: none; color: #ef4444; margin-left: 10px; cursor: pointer; font-weight: bold; font-size: 1rem; padding: 0 4px;">✖</span>
+      </span>
+    `).join('');
+  }
 }
 
 // Reset Handlers
 btnResetAll.addEventListener("click", (e) => {
   e.preventDefault();
-  if (confirm("Are you sure you want to reset all learned verbs, numbers, and days?")) {
+  if (confirm("Are you sure you want to reset all learned verbs, numbers, days, and months?")) {
     // Clear verbs
     verbs.forEach(v => localStorage.removeItem(`verb-${v.id}`));
     // Clear numbers
@@ -789,6 +978,8 @@ btnResetAll.addEventListener("click", (e) => {
     }
     // Clear days
     daysItems.forEach(d => localStorage.removeItem(`days-${d.id}`));
+    // Clear months
+    monthsItems.forEach(m => localStorage.removeItem(`months-${m.id}`));
     updateProgressSummary();
     renderLearnedPage();
   }
@@ -823,6 +1014,15 @@ btnResetDays.addEventListener("click", (e) => {
   }
 });
 
+btnResetMonths.addEventListener("click", (e) => {
+  e.preventDefault();
+  if (confirm("Are you sure you want to reset only learned months?")) {
+    monthsItems.forEach(m => localStorage.removeItem(`months-${m.id}`));
+    updateProgressSummary();
+    renderLearnedPage();
+  }
+});
+
 // Search Row Click Event Helper
 window.toggleSearchRowState = function(e, type, id) {
   const nextState = !isLearned(type, id);
@@ -851,13 +1051,15 @@ globalSearch.addEventListener("input", (e) => {
         pageNumbers.classList.add("active");
       } else if (activeNav.id === "nav-days") {
         pageDays.classList.add("active");
+      } else if (activeNav.id === "nav-months") {
+        pageMonths.classList.add("active");
       } else if (activeNav.id === "nav-learned") {
         pageLearned.classList.add("active");
       }
     }
     updateProgressSummary();
   } else {
-    [pageVerbs, pageNumbers, pageDays, pageLearned].forEach(page => page.classList.remove("active"));
+    [pageVerbs, pageNumbers, pageDays, pageMonths, pageLearned].forEach(page => page.classList.remove("active"));
     pageSearchResults.classList.add("active");
     const summaryContainer = document.querySelector(".app-progress-summary");
     if (summaryContainer) summaryContainer.style.display = "none";
@@ -884,7 +1086,12 @@ function performGlobalSearch(query) {
     d.english.toLowerCase().includes(query)
   );
 
-  const totalMatches = matchVerbs.length + matchNums.length + matchDays.length;
+  const matchMonths = monthsItems.filter(m =>
+    m.russian.toLowerCase().includes(query) ||
+    m.english.toLowerCase().includes(query)
+  );
+
+  const totalMatches = matchVerbs.length + matchNums.length + matchDays.length + matchMonths.length;
   searchResultsTitle.textContent = `${totalMatches} matches found`;
 
   let html = "";
@@ -963,6 +1170,31 @@ function performGlobalSearch(query) {
     `;
   });
 
+  // Months results
+  matchMonths.forEach(month => {
+    const isL = isLearned("months", month.id);
+    const translateUrl = getTranslateUrl(month.russian);
+    html += `
+      <div class="verb-card ${isL ? 'row-learned' : ''}" onclick="toggleSearchRowState(event, 'months', ${month.id})">
+        <div class="verb-row-left" style="display: flex; align-items: baseline; gap: 8px; flex-grow: 1; min-width: 0;">
+          <span class="verb-number" style="background: none; padding: 0; font-size: 0.85rem; font-weight: 500; min-width: 24px; flex-shrink: 0;">M${month.id}.</span>
+          <div style="display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px; min-width: 0;">
+            <strong style="color: var(--text-primary); font-size: 1rem; font-weight: 600; white-space: nowrap;">${month.russian}</strong>
+            <span style="color: var(--text-secondary); font-size: 0.85rem;">${month.english}</span>
+          </div>
+        </div>
+        <div class="verb-actions" style="gap: 16px; flex-shrink: 0;">
+          <a href="${translateUrl}" target="_blank" class="listen-link" onclick="event.stopPropagation();" style="color: var(--accent-color); text-decoration: none; font-size: 1.1rem; padding: 8px;">
+            🔊
+          </a>
+          <button class="learned-toggle ${isL ? 'is-learned' : ''}" style="padding: 8px 12px; pointer-events: none;">
+            ${CHECK_SVG}
+          </button>
+        </div>
+      </div>
+    `;
+  });
+
   if (html === "") {
     searchResultsList.innerHTML = `<span style="color: var(--text-muted); font-style: italic; padding: 16px; display: block; text-align: center;">No matches found. Try another query!</span>`;
   } else {
@@ -978,6 +1210,7 @@ const savedTab = localStorage.getItem("rulearn-active-tab");
 const savedVerbsMode = localStorage.getItem("rulearn-verbs-mode") || "learn";
 const savedNumbersMode = localStorage.getItem("rulearn-numbers-mode") || "learn";
 const savedDaysMode = localStorage.getItem("rulearn-days-mode") || "learn";
+const savedMonthsMode = localStorage.getItem("rulearn-months-mode") || "learn";
 
 // Restore modes
 if (savedVerbsMode === "test") {
@@ -998,11 +1231,19 @@ if (savedDaysMode === "test") {
   btnDaysModeLearn.click();
 }
 
+if (savedMonthsMode === "test") {
+  btnMonthsModeTest.click();
+} else {
+  btnMonthsModeLearn.click();
+}
+
 // Restore tab
 if (savedTab === "nav-numbers") {
   navNumbers.click();
 } else if (savedTab === "nav-days") {
   navDays.click();
+} else if (savedTab === "nav-months") {
+  navMonths.click();
 } else if (savedTab === "nav-learned") {
   navLearned.click();
 } else {

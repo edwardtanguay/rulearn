@@ -69,11 +69,13 @@ body.loaded {
 
 .app-nav {
   display: flex;
+  flex-wrap: wrap;
   gap: 8px;
   background-color: var(--card-bg);
-  padding: 4px;
-  border-radius: 9999px;
+  padding: 8px;
+  border-radius: 16px;
   border: 1px solid var(--card-border);
+  justify-content: center;
 }
 
 .nav-link {
