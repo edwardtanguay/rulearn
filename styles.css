@@ -170,28 +170,32 @@ body {
 .verbs-list {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 0;
 }
 
 .verb-card {
-  background-color: var(--card-bg);
-  border: 1px solid var(--card-border);
-  border-radius: 12px;
-  padding: 16px;
+  background-color: transparent;
+  border: none;
+  border-bottom: 1px solid var(--card-border);
+  border-radius: 0;
+  padding: 6px 4px;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
   gap: 8px;
-  transition: transform 0.2s ease, border-color 0.2s ease;
+  transition: background-color 0.2s ease;
 }
 
 .verb-card:active {
-  transform: scale(0.98);
+  background-color: rgba(255, 255, 255, 0.02);
 }
 
 .verb-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  width: 100%;
 }
 
 .verb-num-eng {

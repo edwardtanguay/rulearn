@@ -318,20 +318,13 @@ function initVerbsView() {
     const isL = isLearned("verb", verb.id);
     return `
       <div class="verb-card">
-        <div class="verb-header">
-          <div class="verb-num-eng">
-            <span class="verb-number">${verb.id}</span>
-            <span class="verb-english">${verb.english}</span>
-          </div>
-          <button class="learned-toggle ${isL ? 'is-learned' : ''}" onclick="toggleListItemState(event, 'verb', ${verb.id})">
-            ✔
-          </button>
+        <div class="verb-row-left" style="display: flex; align-items: center; gap: 8px;">
+          <span class="verb-number" style="background: none; padding: 0; font-size: 0.85rem; font-weight: 500;">${verb.id}.</span>
+          <strong style="color: var(--text-primary); font-size: 1rem; font-weight: 600;">${verb.russian}</strong>
         </div>
-        <div class="verb-details">
-          <span class="verb-russian">${verb.russian}</span>
-          <span class="verb-pron">${verb.pron}</span>
-        </div>
-        ${verb.example ? `<div class="verb-example-box">${verb.example}</div>` : ''}
+        <button class="learned-toggle ${isL ? 'is-learned' : ''}" onclick="toggleListItemState(event, 'verb', ${verb.id})" style="padding: 8px 12px;">
+          ✔
+        </button>
       </div>
     `;
   }).join('');
@@ -345,19 +338,16 @@ function initNumbersView() {
     const isL = isLearned("number", i);
     numberCards.push(`
       <div class="verb-card">
-        <div class="verb-header">
-          <div class="verb-num-eng">
-            <span class="verb-number">${i}</span>
-            <span class="verb-english">${ruSpelling}</span>
-          </div>
-          <div class="verb-actions">
-            <a href="${translateUrl}" target="_blank" class="listen-link" style="color: var(--accent-color); text-decoration: none; font-size: 0.85rem; font-weight: 500;">
-              🔊 Listen
-            </a>
-            <button class="learned-toggle ${isL ? 'is-learned' : ''}" onclick="toggleListItemState(event, 'number', ${i})">
-              ✔
-            </button>
-          </div>
+        <div class="verb-row-left" style="display: flex; align-items: center; gap: 8px;">
+          <span class="verb-number" style="background: none; padding: 0; font-size: 0.95rem; font-weight: 600; color: var(--text-primary);">${i}</span>
+        </div>
+        <div class="verb-actions" style="gap: 16px;">
+          <a href="${translateUrl}" target="_blank" class="listen-link" style="color: var(--accent-color); text-decoration: none; font-size: 1.1rem; padding: 8px;">
+            🔊
+          </a>
+          <button class="learned-toggle ${isL ? 'is-learned' : ''}" onclick="toggleListItemState(event, 'number', ${i})" style="padding: 8px 12px;">
+            ✔
+          </button>
         </div>
       </div>
     `);
@@ -468,23 +458,17 @@ function renderLearnedPage() {
   // Learned Verbs
   const learnedVerbs = verbs.filter(verb => isLearned("verb", verb.id));
   if (learnedVerbs.length === 0) {
-    learnedVerbsList.innerHTML = `<div class="verb-card" style="text-align: center; color: var(--text-muted);">No verbs learned yet.</div>`;
+    learnedVerbsList.innerHTML = `<div class="verb-card" style="text-align: center; color: var(--text-muted); justify-content: center;">No verbs learned yet.</div>`;
   } else {
     learnedVerbsList.innerHTML = learnedVerbs.map(verb => `
       <div class="verb-card">
-        <div class="verb-header">
-          <div class="verb-num-eng">
-            <span class="verb-number">${verb.id}</span>
-            <span class="verb-english">${verb.english}</span>
-          </div>
-          <button class="learned-toggle is-learned" onclick="toggleListItemState(event, 'verb', ${verb.id})">
-            ✔
-          </button>
+        <div class="verb-row-left" style="display: flex; align-items: center; gap: 8px;">
+          <span class="verb-number" style="background: none; padding: 0; font-size: 0.85rem; font-weight: 500;">${verb.id}.</span>
+          <strong style="color: var(--text-primary); font-size: 1rem; font-weight: 600;">${verb.russian}</strong>
         </div>
-        <div class="verb-details">
-          <span class="verb-russian">${verb.russian}</span>
-          <span class="verb-pron">${verb.pron}</span>
-        </div>
+        <button class="learned-toggle is-learned" onclick="toggleListItemState(event, 'verb', ${verb.id})" style="padding: 8px 12px;">
+          ✔
+        </button>
       </div>
     `).join('');
   }
@@ -498,26 +482,23 @@ function renderLearnedPage() {
   }
 
   if (learnedNums.length === 0) {
-    learnedNumbersList.innerHTML = `<div class="verb-card" style="text-align: center; color: var(--text-muted);">No numbers learned yet.</div>`;
+    learnedNumbersList.innerHTML = `<div class="verb-card" style="text-align: center; color: var(--text-muted); justify-content: center;">No numbers learned yet.</div>`;
   } else {
     learnedNumbersList.innerHTML = learnedNums.map(i => {
       const ruSpelling = getRussianNumber(i);
       const translateUrl = getTranslateUrl(ruSpelling);
       return `
         <div class="verb-card">
-          <div class="verb-header">
-            <div class="verb-num-eng">
-              <span class="verb-number">${i}</span>
-              <span class="verb-english">${ruSpelling}</span>
-            </div>
-            <div class="verb-actions">
-              <a href="${translateUrl}" target="_blank" class="listen-link" style="color: var(--accent-color); text-decoration: none; font-size: 0.85rem; font-weight: 500;">
-                🔊 Listen
-              </a>
-              <button class="learned-toggle is-learned" onclick="toggleListItemState(event, 'number', ${i})">
-                ✔
-              </button>
-            </div>
+          <div class="verb-row-left" style="display: flex; align-items: center; gap: 8px;">
+            <span class="verb-number" style="background: none; padding: 0; font-size: 0.95rem; font-weight: 600; color: var(--text-primary);">${i}</span>
+          </div>
+          <div class="verb-actions" style="gap: 16px;">
+            <a href="${translateUrl}" target="_blank" class="listen-link" style="color: var(--accent-color); text-decoration: none; font-size: 1.1rem; padding: 8px;">
+              🔊
+            </a>
+            <button class="learned-toggle is-learned" onclick="toggleListItemState(event, 'number', ${i})" style="padding: 8px 12px;">
+              ✔
+            </button>
           </div>
         </div>
       `;
