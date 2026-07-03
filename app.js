@@ -783,10 +783,10 @@ function initOppositesView() {
     const translateUrl = getTranslateUrl(opposite.russian);
     return `
       <div class="verb-card ${isL ? 'row-learned' : ''}" onclick="toggleRowState(event, 'opposites', ${opposite.id})">
-        <div class="verb-row-left" style="display: flex; align-items: baseline; gap: 8px; flex-grow: 1; min-width: 0;">
+        <div class="verb-row-left" style="display: flex; align-items: center; gap: 8px; flex-grow: 1; min-width: 0;">
           <span class="verb-number" style="background: none; padding: 0; font-size: 0.85rem; font-weight: 500; min-width: 24px; flex-shrink: 0;">${opposite.id}.</span>
-          <div style="display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px; min-width: 0;">
-            <strong style="color: var(--text-primary); font-size: 1rem; font-weight: 600; white-space: nowrap;">${opposite.russian}</strong>
+          <div style="display: flex; flex-direction: column; gap: 2px; min-width: 0;">
+            <strong style="color: var(--text-primary); font-size: 1rem; font-weight: 600;">${opposite.russian}</strong>
             <span style="color: var(--text-secondary); font-size: 0.85rem;">${opposite.english}</span>
           </div>
         </div>

@@ -1,15 +1,15 @@
 /* Modern variables for premium dark theme */
 :root {
-  --bg-color: #0b0f19;
-  --card-bg: #151c2c;
-  --card-border: rgba(255, 255, 255, 0.05);
+  --bg-color: #080c14;
+  --card-bg: #1a2336;
+  --card-border: rgba(255, 255, 255, 0.15);
   --accent-color: #3b82f6;
   --accent-gradient: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
-  --text-primary: #f3f4f6;
-  --text-secondary: #9ca3af;
-  --text-muted: #6b7280;
+  --text-primary: #ffffff;
+  --text-secondary: #f1f5f9;
+  --text-muted: #cbd5e1;
   --font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  --shadow-lg: 0 10px 25px -5px rgba(0, 0, 0, 0.3), 0 8px 10px -6px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 10px 25px -5px rgba(0, 0, 0, 0.4), 0 8px 10px -6px rgba(0, 0, 0, 0.4);
 }
 
 * {
@@ -232,8 +232,8 @@ body.loaded {
 .verb-number {
   font-size: 0.8rem;
   font-weight: 700;
-  color: var(--text-muted);
-  background-color: rgba(255, 255, 255, 0.05);
+  color: var(--text-secondary);
+  background-color: rgba(255, 255, 255, 0.1);
   padding: 2px 6px;
   border-radius: 4px;
 }
