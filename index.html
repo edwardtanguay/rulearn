@@ -26,6 +26,7 @@
         <button id="nav-numbers" class="nav-link">numbers</button>
         <button id="nav-days" class="nav-link">days</button>
         <button id="nav-months" class="nav-link">months</button>
+        <button id="nav-opposites" class="nav-link">opposites</button>
         <button id="nav-learned" class="nav-link">learned</button>
       </nav>
       <div class="app-progress-summary">
@@ -33,6 +34,7 @@
         <span id="progress-numbers">0 of 100 numbers learned</span>
         <span id="progress-days">0 of 7 days learned</span>
         <span id="progress-months">0 of 12 months learned</span>
+        <span id="progress-opposites">0 of 30 opposites learned</span>
       </div>
     </header>
 
@@ -226,6 +228,49 @@
         </div>
       </section>
 
+      <!-- Opposites Page -->
+      <section id="page-opposites" class="page-section">
+        <div class="mode-selector">
+          <button id="btn-opposites-mode-learn" class="mode-btn active">learn</button>
+          <button id="btn-opposites-mode-test" class="mode-btn">test</button>
+        </div>
+
+        <!-- Learn Mode View -->
+        <div id="view-opposites-learn" class="view-content active">
+          <div id="opposites-list" class="verbs-list">
+            <!-- Dynamic list of opposites will go here -->
+          </div>
+        </div>
+
+        <!-- Test Mode View -->
+        <div id="view-opposites-test" class="view-content">
+          <div class="test-card-container">
+            <div id="opposites-test-card" class="test-card">
+              <div class="card-inner">
+                <div class="card-front">
+                  <button class="learned-toggle card-toggle" id="test-opposites-toggle-front" title="Mark as Learned"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4.5" stroke-linecap="square" stroke-linejoin="miter" style="width: 1.1rem; height: 1.1rem; display: inline-block; vertical-align: middle;"><path d="M4 12l5 5L20 6" /></svg></button>
+                  <span class="card-label">English Opposites</span>
+                  <h2 id="test-opposites-english" class="verb-meaning">hot / cold</h2>
+                  <span class="tap-hint">Tap to reveal</span>
+                </div>
+                <div class="card-back">
+                  <button class="learned-toggle card-toggle" id="test-opposites-toggle-back" title="Mark as Learned"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4.5" stroke-linecap="square" stroke-linejoin="miter" style="width: 1.1rem; height: 1.1rem; display: inline-block; vertical-align: middle;"><path d="M4 12l5 5L20 6" /></svg></button>
+                  <span id="test-opposites-card-label" class="card-label">Russian Opposites</span>
+                  <h2 id="test-opposites-russian" class="verb-cyrillic">горячий / холодный</h2>
+                  <div class="pronunciation-badge" style="display: inline-flex; align-items: center; gap: 8px; justify-content: center; width: auto; margin: 0 auto;">
+                    <span id="test-opposites-pronunciation">[goryachiy / kholodniy]</span>
+                    <a id="test-opposites-listen-link" href="#" target="_blank" class="listen-link" style="color: var(--accent-color); text-decoration: none; font-size: 1.1rem; line-height: 1; display: inline-flex; align-items: center; padding: 4px;">
+                      🔊
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <button id="btn-next-opposites-test" class="action-btn next-btn">Next Pair</button>
+          </div>
+        </div>
+      </section>
+
       <!-- Learned Page -->
       <section id="page-learned" class="page-section">
         <div class="learned-section" style="margin-bottom: 24px;">
@@ -256,11 +301,19 @@
           </div>
         </div>
 
+        <div class="learned-section" style="margin-bottom: 24px;">
+          <h3 id="learned-opposites-title" style="font-size: 1.1rem; color: #10b981; margin-bottom: 12px; border-bottom: 1px solid var(--card-border); padding-bottom: 8px;">0 Learned Opposites</h3>
+          <div id="learned-opposites-list-csv" class="learned-list-container">
+            <!-- Badges will go here -->
+          </div>
+        </div>
+
         <div class="reset-controls" style="display: flex; flex-direction: column; align-items: center; gap: 10px; margin-top: auto; border-top: 1px solid var(--card-border); padding-top: 16px;">
           <a href="#" id="btn-reset-verbs" style="color: var(--text-muted); font-size: 0.8rem; text-decoration: underline;">Reset only verbs</a>
           <a href="#" id="btn-reset-numbers" style="color: var(--text-muted); font-size: 0.8rem; text-decoration: underline;">Reset only numbers</a>
           <a href="#" id="btn-reset-days" style="color: var(--text-muted); font-size: 0.8rem; text-decoration: underline;">Reset only days</a>
           <a href="#" id="btn-reset-months" style="color: var(--text-muted); font-size: 0.8rem; text-decoration: underline;">Reset only months</a>
+          <a href="#" id="btn-reset-opposites" style="color: var(--text-muted); font-size: 0.8rem; text-decoration: underline;">Reset only opposites</a>
           <a href="#" id="btn-reset-all" style="color: var(--text-muted); font-size: 0.85rem; text-decoration: underline; font-weight: 500; font-style: italic;">Reset all learned items</a>
         </div>
       </section>

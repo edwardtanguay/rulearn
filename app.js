@@ -82,6 +82,40 @@ const monthsItems = [
   { id: 12, english: "December", russian: "декабрь", pron: "[dekabr']" }
 ];
 
+// Russian Opposites Data (30 pairs)
+const oppositesItems = [
+  { id: 1, english: "hot / cold", russian: "горячий / холодный", pron: "[goryachiy / kholodniy]" },
+  { id: 2, english: "big / small", russian: "большой / маленький", pron: "[bol'shoy / malen'kiy]" },
+  { id: 3, english: "fast / slow", russian: "быстрый / медленный", pron: "[bistriy / medlenniy]" },
+  { id: 4, english: "day / night", russian: "день / ночь", pron: "[den' / noch']" },
+  { id: 5, english: "good / bad", russian: "хороший / плохой", pron: "[khoroshiy / plokhoy]" },
+  { id: 6, english: "young / old", russian: "молодой / старый", pron: "[molodoy / stariy]" },
+  { id: 7, english: "new / old", russian: "новый / старый", pron: "[noviy / stariy]" },
+  { id: 8, english: "high / low", russian: "высокий / низкий", pron: "[visokiy / nizkiy]" },
+  { id: 9, english: "heavy / light", russian: "тяжёлый / лёгкий", pron: "[tyazheliy / legkiy]" },
+  { id: 10, english: "wet / dry", russian: "мокрый / сухой", pron: "[mokriy / sukhoy]" },
+  { id: 11, english: "soft / hard", russian: "мягкий / твёрдый", pron: "[myagkiy / tverdiy]" },
+  { id: 12, english: "rich / poor", russian: "богатый / бедный", pron: "[bogatiy / bedniy]" },
+  { id: 13, english: "clean / dirty", russian: "чистый / грязный", pron: "[chistiy / gryazniy]" },
+  { id: 14, english: "strong / weak", russian: "сильный / слабый", pron: "[sil'niy / slabiy]" },
+  { id: 15, english: "happy / sad", russian: "весёлый / грустный", pron: "[veseliy / grustniy]" },
+  { id: 16, english: "first / last", russian: "первый / последний", pron: "[perviy / posledniy]" },
+  { id: 17, english: "open / closed", russian: "открытый / закрытый", pron: "[otkritiy / zakritiy]" },
+  { id: 18, english: "full / empty", russian: "полный / пустой", pron: "[polniy / pustoy]" },
+  { id: 19, english: "safe / dangerous", russian: "безопасный / опасный", pron: "[bezopasniy / opasniy]" },
+  { id: 20, english: "easy / difficult", russian: "лёгкий / трудный", pron: "[legkiy / trudniy]" },
+  { id: 21, english: "near / far", russian: "близкий / далёкий", pron: "[blizkiy / dalekiy]" },
+  { id: 22, english: "left / right", russian: "левый / правый", pron: "[leviy / praviy]" },
+  { id: 23, english: "true / false", russian: "истинный / ложный", pron: "[istinniy / lozhniy]" },
+  { id: 24, english: "sharp / dull", russian: "острый / тупой", pron: "[ostriy / tupoy]" },
+  { id: 25, english: "sweet / sour", russian: "сладкий / кислый", pron: "[sladkiy / kisliy]" },
+  { id: 26, english: "wide / narrow", russian: "широкий / узкий", pron: "[shirokiy / uzkiy]" },
+  { id: 27, english: "thick / thin", russian: "толстый / тонкий", pron: "[tolstiy / tonkiy]" },
+  { id: 28, english: "beautiful / ugly", russian: "красивый / некрасивый", pron: "[krasiviy / nekrasiviy]" },
+  { id: 29, english: "cheap / expensive", russian: "дешёвый / дорогой", pron: "[desheviy / dorogoy]" },
+  { id: 30, english: "alive / dead", russian: "живой / мёртвый", pron: "[zhivoy / mertviy]" }
+];
+
 // Exciting sharp SVG checkmark template
 const CHECK_SVG = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4.5" stroke-linecap="square" stroke-linejoin="miter" style="width: 1.1rem; height: 1.1rem; display: inline-block; vertical-align: middle;"><path d="M4 12l5 5L20 6" /></svg>`;
 
@@ -98,16 +132,21 @@ let testDaysOrder = [];
 let currentMonthsTestIndex = 0;
 let testMonthsOrder = [];
 
+let currentOppositesTestIndex = 0;
+let testOppositesOrder = [];
+
 // DOM Elements - Main Pages
 const navVerbs = document.getElementById("nav-verbs");
 const navNumbers = document.getElementById("nav-numbers");
 const navDays = document.getElementById("nav-days");
 const navMonths = document.getElementById("nav-months");
+const navOpposites = document.getElementById("nav-opposites");
 const navLearned = document.getElementById("nav-learned");
 const pageVerbs = document.getElementById("page-verbs");
 const pageNumbers = document.getElementById("page-numbers");
 const pageDays = document.getElementById("page-days");
 const pageMonths = document.getElementById("page-months");
+const pageOpposites = document.getElementById("page-opposites");
 const pageLearned = document.getElementById("page-learned");
 
 // DOM Elements - Verbs View
@@ -175,6 +214,22 @@ const btnNextMonthsTest = document.getElementById("btn-next-months-test");
 const testMonthsToggleFront = document.getElementById("test-months-toggle-front");
 const testMonthsToggleBack = document.getElementById("test-months-toggle-back");
 
+// DOM Elements - Opposites View
+const btnOppositesModeLearn = document.getElementById("btn-opposites-mode-learn");
+const btnOppositesModeTest = document.getElementById("btn-opposites-mode-test");
+const viewOppositesLearn = document.getElementById("view-opposites-learn");
+const viewOppositesTest = document.getElementById("view-opposites-test");
+const oppositesList = document.getElementById("opposites-list");
+const oppositesTestCard = document.getElementById("opposites-test-card");
+const testOppositesEnglish = document.getElementById("test-opposites-english");
+const testOppositesRussian = document.getElementById("test-opposites-russian");
+const testOppositesCardLabel = document.getElementById("test-opposites-card-label");
+const testOppositesPronunciation = document.getElementById("test-opposites-pronunciation");
+const testOppositesListenLink = document.getElementById("test-opposites-listen-link");
+const btnNextOppositesTest = document.getElementById("btn-next-opposites-test");
+const testOppositesToggleFront = document.getElementById("test-opposites-toggle-front");
+const testOppositesToggleBack = document.getElementById("test-opposites-toggle-back");
+
 // DOM Elements - Learned Page View
 const learnedVerbsTitle = document.getElementById("learned-verbs-title");
 const learnedVerbsListCsv = document.getElementById("learned-verbs-list-csv");
@@ -184,10 +239,13 @@ const learnedDaysTitle = document.getElementById("learned-days-title");
 const learnedDaysListCsv = document.getElementById("learned-days-list-csv");
 const learnedMonthsTitle = document.getElementById("learned-months-title");
 const learnedMonthsListCsv = document.getElementById("learned-months-list-csv");
+const learnedOppositesTitle = document.getElementById("learned-opposites-title");
+const learnedOppositesListCsv = document.getElementById("learned-opposites-list-csv");
 const btnResetVerbs = document.getElementById("btn-reset-verbs");
 const btnResetNumbers = document.getElementById("btn-reset-numbers");
 const btnResetDays = document.getElementById("btn-reset-days");
 const btnResetMonths = document.getElementById("btn-reset-months");
+const btnResetOpposites = document.getElementById("btn-reset-opposites");
 const btnResetAll = document.getElementById("btn-reset-all");
 
 // DOM Elements - Global Search
@@ -222,21 +280,25 @@ function updateProgressSummary() {
 
   const learnedDaysCount = daysItems.filter(d => isLearned("days", d.id)).length;
   const learnedMonthsCount = monthsItems.filter(m => isLearned("months", m.id)).length;
+  const learnedOppositesCount = oppositesItems.filter(o => isLearned("opposites", o.id)).length;
   
   const verbPct = (learnedVerbsCount / verbs.length) * 100;
   const numPct = (learnedNumsCount / 100) * 100;
   const daysPct = (learnedDaysCount / daysItems.length) * 100;
   const monthsPct = (learnedMonthsCount / monthsItems.length) * 100;
+  const oppositesPct = (learnedOppositesCount / oppositesItems.length) * 100;
 
   const verbHue = verbPct * 1.2;
   const numHue = numPct * 1.2;
   const daysHue = daysPct * 1.2;
   const monthsHue = monthsPct * 1.2;
+  const oppositesHue = oppositesPct * 1.2;
 
   const verbEl = document.getElementById("progress-verbs");
   const numEl = document.getElementById("progress-numbers");
   const daysEl = document.getElementById("progress-days");
   const monthsEl = document.getElementById("progress-months");
+  const oppositesEl = document.getElementById("progress-opposites");
   const summaryContainer = document.querySelector(".app-progress-summary");
 
   verbEl.textContent = `${learnedVerbsCount} of ${verbs.length} verbs learned`;
@@ -251,6 +313,9 @@ function updateProgressSummary() {
   monthsEl.textContent = `${learnedMonthsCount} of ${monthsItems.length} months learned`;
   monthsEl.style.color = `hsl(${monthsHue}, 85%, 60%)`;
 
+  oppositesEl.textContent = `${learnedOppositesCount} of ${oppositesItems.length} opposites learned`;
+  oppositesEl.style.color = `hsl(${oppositesHue}, 85%, 60%)`;
+
   // Show/Hide context-dependent items
   const activeNav = document.querySelector(".app-nav .nav-link.active");
   if (activeNav && summaryContainer) {
@@ -260,24 +325,35 @@ function updateProgressSummary() {
       numEl.style.display = "none";
       daysEl.style.display = "none";
       monthsEl.style.display = "none";
+      oppositesEl.style.display = "none";
     } else if (activeNav.id === "nav-numbers") {
       summaryContainer.style.display = "flex";
       verbEl.style.display = "none";
       numEl.style.display = "inline-block";
       daysEl.style.display = "none";
       monthsEl.style.display = "none";
+      oppositesEl.style.display = "none";
     } else if (activeNav.id === "nav-days") {
       summaryContainer.style.display = "flex";
       verbEl.style.display = "none";
       numEl.style.display = "none";
       daysEl.style.display = "inline-block";
       monthsEl.style.display = "none";
+      oppositesEl.style.display = "none";
     } else if (activeNav.id === "nav-months") {
       summaryContainer.style.display = "flex";
       verbEl.style.display = "none";
       numEl.style.display = "none";
       daysEl.style.display = "none";
       monthsEl.style.display = "inline-block";
+      oppositesEl.style.display = "none";
+    } else if (activeNav.id === "nav-opposites") {
+      summaryContainer.style.display = "flex";
+      verbEl.style.display = "none";
+      numEl.style.display = "none";
+      daysEl.style.display = "none";
+      monthsEl.style.display = "none";
+      oppositesEl.style.display = "inline-block";
     } else {
       // Learned Page - hide progress header entirely
       summaryContainer.style.display = "none";
@@ -354,6 +430,13 @@ navMonths.addEventListener("click", () => {
   initMonthsView();
 });
 
+navOpposites.addEventListener("click", () => {
+  globalSearch.value = "";
+  pageSearchResults.classList.remove("active");
+  setActivePage(navOpposites, pageOpposites);
+  initOppositesView();
+});
+
 navLearned.addEventListener("click", () => {
   globalSearch.value = "";
   pageSearchResults.classList.remove("active");
@@ -364,8 +447,8 @@ navLearned.addEventListener("click", () => {
 function setActivePage(navBtn, pageEl) {
   globalSearch.value = "";
   if (clearSearch) clearSearch.style.display = "none";
-  [navVerbs, navNumbers, navDays, navMonths, navLearned].forEach(btn => btn.classList.remove("active"));
-  [pageVerbs, pageNumbers, pageDays, pageMonths, pageLearned].forEach(page => page.classList.remove("active"));
+  [navVerbs, navNumbers, navDays, navMonths, navOpposites, navLearned].forEach(btn => btn.classList.remove("active"));
+  [pageVerbs, pageNumbers, pageDays, pageMonths, pageOpposites, pageLearned].forEach(page => page.classList.remove("active"));
   navBtn.classList.add("active");
   pageEl.classList.add("active");
   updateProgressSummary();
@@ -448,6 +531,25 @@ btnMonthsModeTest.addEventListener("click", () => {
   localStorage.setItem("rulearn-months-mode", "test");
 });
 
+// Opposites View Mode switching
+btnOppositesModeLearn.addEventListener("click", () => {
+  btnOppositesModeLearn.classList.add("active");
+  btnOppositesModeTest.classList.remove("active");
+  viewOppositesLearn.classList.add("active");
+  viewOppositesTest.classList.remove("active");
+  initOppositesView();
+  localStorage.setItem("rulearn-opposites-mode", "learn");
+});
+
+btnOppositesModeTest.addEventListener("click", () => {
+  btnOppositesModeTest.classList.add("active");
+  btnOppositesModeLearn.classList.remove("active");
+  viewOppositesLearn.classList.remove("active");
+  viewOppositesTest.classList.add("active");
+  startNewOppositesTest();
+  localStorage.setItem("rulearn-opposites-mode", "test");
+});
+
 // Card Flip Handlers
 testCard.addEventListener("click", () => {
   testCard.classList.toggle("flipped");
@@ -463,6 +565,10 @@ daysTestCard.addEventListener("click", () => {
 
 monthsTestCard.addEventListener("click", () => {
   monthsTestCard.classList.toggle("flipped");
+});
+
+oppositesTestCard.addEventListener("click", () => {
+  oppositesTestCard.classList.toggle("flipped");
 });
 
 [testVerbToggleFront, testVerbToggleBack].forEach(toggle => {
@@ -512,6 +618,18 @@ monthsTestCard.addEventListener("click", () => {
   });
 });
 
+[testOppositesToggleFront, testOppositesToggleBack].forEach(toggle => {
+  toggle.addEventListener("click", (e) => {
+    e.stopPropagation();
+    const oppositeIndex = testOppositesOrder[currentOppositesTestIndex];
+    const opposite = oppositesItems[oppositeIndex];
+    const nextState = !isLearned("opposites", opposite.id);
+    setLearned("opposites", opposite.id, nextState);
+    updateToggleUI(testOppositesToggleFront, nextState);
+    updateToggleUI(testOppositesToggleBack, nextState);
+  });
+});
+
 // Next Button Handlers
 btnNextTest.addEventListener("click", (e) => {
   e.stopPropagation();
@@ -542,6 +660,14 @@ btnNextMonthsTest.addEventListener("click", (e) => {
   monthsTestCard.classList.remove("flipped");
   setTimeout(() => {
     nextTestMonths();
+  }, 200);
+});
+
+btnNextOppositesTest.addEventListener("click", (e) => {
+  e.stopPropagation();
+  oppositesTestCard.classList.remove("flipped");
+  setTimeout(() => {
+    nextTestOpposites();
   }, 200);
 });
 
@@ -636,6 +762,32 @@ function initMonthsView() {
           <div style="display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px; min-width: 0;">
             <strong style="color: var(--text-primary); font-size: 1rem; font-weight: 600; white-space: nowrap;">${month.russian}</strong>
             <span style="color: var(--text-secondary); font-size: 0.85rem;">${month.english}</span>
+          </div>
+        </div>
+        <div class="verb-actions" style="gap: 16px; flex-shrink: 0;">
+          <a href="${translateUrl}" target="_blank" class="listen-link" onclick="event.stopPropagation();" style="color: var(--accent-color); text-decoration: none; font-size: 1.1rem; padding: 8px;">
+            🔊
+          </a>
+          <button class="learned-toggle ${isL ? 'is-learned' : ''}" style="padding: 8px 12px; pointer-events: none;">
+            ${CHECK_SVG}
+          </button>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function initOppositesView() {
+  oppositesList.innerHTML = oppositesItems.map(opposite => {
+    const isL = isLearned("opposites", opposite.id);
+    const translateUrl = getTranslateUrl(opposite.russian);
+    return `
+      <div class="verb-card ${isL ? 'row-learned' : ''}" onclick="toggleRowState(event, 'opposites', ${opposite.id})">
+        <div class="verb-row-left" style="display: flex; align-items: baseline; gap: 8px; flex-grow: 1; min-width: 0;">
+          <span class="verb-number" style="background: none; padding: 0; font-size: 0.85rem; font-weight: 500; min-width: 24px; flex-shrink: 0;">${opposite.id}.</span>
+          <div style="display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px; min-width: 0;">
+            <strong style="color: var(--text-primary); font-size: 1rem; font-weight: 600; white-space: nowrap;">${opposite.russian}</strong>
+            <span style="color: var(--text-secondary); font-size: 0.85rem;">${opposite.english}</span>
           </div>
         </div>
         <div class="verb-actions" style="gap: 16px; flex-shrink: 0;">
@@ -858,6 +1010,47 @@ function nextTestMonths() {
   }
 }
 
+// Opposites Testing Logic
+function startNewOppositesTest() {
+  let testList = oppositesItems.filter(o => !isLearned("opposites", o.id));
+  if (testList.length === 0) {
+    alert(`You've learned all ${oppositesItems.length} opposites! Testing on all opposites instead.`);
+    testList = oppositesItems;
+  }
+  testOppositesOrder = shuffle(testList.map(o => oppositesItems.indexOf(o)));
+  currentOppositesTestIndex = 0;
+  loadTestOpposite();
+}
+
+function loadTestOpposite() {
+  oppositesTestCard.classList.remove("flipped");
+  const oppositeIndex = testOppositesOrder[currentOppositesTestIndex];
+  const opposite = oppositesItems[oppositeIndex];
+
+  testOppositesEnglish.textContent = opposite.english;
+  testOppositesCardLabel.textContent = `pair #${opposite.id}`;
+  testOppositesRussian.textContent = opposite.russian;
+  testOppositesPronunciation.textContent = opposite.pron;
+  
+  if (testOppositesListenLink) {
+    testOppositesListenLink.href = getTranslateUrl(opposite.russian);
+  }
+
+  const isL = isLearned("opposites", opposite.id);
+  updateToggleUI(testOppositesToggleFront, isL);
+  updateToggleUI(testOppositesToggleBack, isL);
+}
+
+function nextTestOpposites() {
+  currentOppositesTestIndex++;
+  if (currentOppositesTestIndex >= testOppositesOrder.length) {
+    alert("You completed the active opposites list! Starting another randomized run.");
+    startNewOppositesTest();
+  } else {
+    loadTestOpposite();
+  }
+}
+
 // Click to reveal answer logic inside learned tags
 window.toggleRevealLearned = function(el) {
   el.classList.toggle("is-revealed");
@@ -967,12 +1160,32 @@ function renderLearnedPage() {
       </span>
     `).join('');
   }
+
+  // Learned Opposites
+  const learnedOpposites = oppositesItems.filter(op => isLearned("opposites", op.id));
+  const oppositesPct = (learnedOpposites.length / oppositesItems.length) * 100;
+  const oppositesHue = oppositesPct * 1.2;
+
+  learnedOppositesTitle.textContent = `${learnedOpposites.length} of ${oppositesItems.length} opposites learned`;
+  learnedOppositesTitle.style.color = `hsl(${oppositesHue}, 85%, 60%)`;
+
+  if (learnedOpposites.length === 0) {
+    learnedOppositesListCsv.innerHTML = `<span style="color: var(--text-muted); font-style: italic;">No opposites learned yet.</span>`;
+  } else {
+    learnedOppositesListCsv.innerHTML = learnedOpposites.map(op => `
+      <span class="learned-csv-item" onclick="toggleRevealLearned(this)">
+        <span class="learned-val">${op.russian}</span>
+        <span class="learned-ans" style="display: none; color: #10b981; margin-left: 6px; font-weight: 600;"><span style="color: var(--text-muted); font-weight: normal; margin-right: 4px; font-size: 0.72rem;">${op.id}:</span>${op.english}</span>
+        <span class="unlearn-x" onclick="event.stopPropagation(); toggleListItemState(event, 'opposites', ${op.id});" title="unlearn" style="display: none; color: #ef4444; margin-left: 10px; cursor: pointer; font-weight: bold; font-size: 1rem; padding: 0 4px;">✖</span>
+      </span>
+    `).join('');
+  }
 }
 
 // Reset Handlers
 btnResetAll.addEventListener("click", (e) => {
   e.preventDefault();
-  if (confirm("Are you sure you want to reset all learned verbs, numbers, days, and months?")) {
+  if (confirm("Are you sure you want to reset all learned verbs, numbers, days, months, and opposites?")) {
     // Clear verbs
     verbs.forEach(v => localStorage.removeItem(`verb-${v.id}`));
     // Clear numbers
@@ -983,6 +1196,8 @@ btnResetAll.addEventListener("click", (e) => {
     daysItems.forEach(d => localStorage.removeItem(`days-${d.id}`));
     // Clear months
     monthsItems.forEach(m => localStorage.removeItem(`months-${m.id}`));
+    // Clear opposites
+    oppositesItems.forEach(o => localStorage.removeItem(`opposites-${o.id}`));
     updateProgressSummary();
     renderLearnedPage();
   }
@@ -1026,6 +1241,15 @@ btnResetMonths.addEventListener("click", (e) => {
   }
 });
 
+btnResetOpposites.addEventListener("click", (e) => {
+  e.preventDefault();
+  if (confirm("Are you sure you want to reset only learned opposites?")) {
+    oppositesItems.forEach(o => localStorage.removeItem(`opposites-${o.id}`));
+    updateProgressSummary();
+    renderLearnedPage();
+  }
+});
+
 // Search Row Click Event Helper
 window.toggleSearchRowState = function(e, type, id) {
   const nextState = !isLearned(type, id);
@@ -1057,6 +1281,8 @@ globalSearch.addEventListener("input", (e) => {
         pageDays.classList.add("active");
       } else if (activeNav.id === "nav-months") {
         pageMonths.classList.add("active");
+      } else if (activeNav.id === "nav-opposites") {
+        pageOpposites.classList.add("active");
       } else if (activeNav.id === "nav-learned") {
         pageLearned.classList.add("active");
       }
@@ -1064,7 +1290,7 @@ globalSearch.addEventListener("input", (e) => {
     updateProgressSummary();
   } else {
     clearSearch.style.display = "inline-flex";
-    [pageVerbs, pageNumbers, pageDays, pageMonths, pageLearned].forEach(page => page.classList.remove("active"));
+    [pageVerbs, pageNumbers, pageDays, pageMonths, pageOpposites, pageLearned].forEach(page => page.classList.remove("active"));
     pageSearchResults.classList.add("active");
     const summaryContainer = document.querySelector(".app-progress-summary");
     if (summaryContainer) summaryContainer.style.display = "none";
@@ -1086,6 +1312,8 @@ clearSearch.addEventListener("click", () => {
       pageDays.classList.add("active");
     } else if (activeNav.id === "nav-months") {
       pageMonths.classList.add("active");
+    } else if (activeNav.id === "nav-opposites") {
+      pageOpposites.classList.add("active");
     } else if (activeNav.id === "nav-learned") {
       pageLearned.classList.add("active");
     }
@@ -1117,7 +1345,12 @@ function performGlobalSearch(query) {
     m.english.toLowerCase().includes(query)
   );
 
-  const totalMatches = matchVerbs.length + matchNums.length + matchDays.length + matchMonths.length;
+  const matchOpposites = oppositesItems.filter(o =>
+    o.russian.toLowerCase().includes(query) ||
+    o.english.toLowerCase().includes(query)
+  );
+
+  const totalMatches = matchVerbs.length + matchNums.length + matchDays.length + matchMonths.length + matchOpposites.length;
   searchResultsTitle.textContent = `${totalMatches} matches found`;
 
   let html = "";
@@ -1221,6 +1454,31 @@ function performGlobalSearch(query) {
     `;
   });
 
+  // Opposites results
+  matchOpposites.forEach(op => {
+    const isL = isLearned("opposites", op.id);
+    const translateUrl = getTranslateUrl(op.russian);
+    html += `
+      <div class="verb-card ${isL ? 'row-learned' : ''}" onclick="toggleSearchRowState(event, 'opposites', ${op.id})">
+        <div class="verb-row-left" style="display: flex; align-items: baseline; gap: 8px; flex-grow: 1; min-width: 0;">
+          <span class="verb-number" style="background: none; padding: 0; font-size: 0.85rem; font-weight: 500; min-width: 24px; flex-shrink: 0;">O${op.id}.</span>
+          <div style="display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px; min-width: 0;">
+            <strong style="color: var(--text-primary); font-size: 1rem; font-weight: 600; white-space: nowrap;">${op.russian}</strong>
+            <span style="color: var(--text-secondary); font-size: 0.85rem;">${op.english}</span>
+          </div>
+        </div>
+        <div class="verb-actions" style="gap: 16px; flex-shrink: 0;">
+          <a href="${translateUrl}" target="_blank" class="listen-link" onclick="event.stopPropagation();" style="color: var(--accent-color); text-decoration: none; font-size: 1.1rem; padding: 8px;">
+            🔊
+          </a>
+          <button class="learned-toggle ${isL ? 'is-learned' : ''}" style="padding: 8px 12px; pointer-events: none;">
+            ${CHECK_SVG}
+          </button>
+        </div>
+      </div>
+    `;
+  });
+
   if (html === "") {
     searchResultsList.innerHTML = `<span style="color: var(--text-muted); font-style: italic; padding: 16px; display: block; text-align: center;">No matches found. Try another query!</span>`;
   } else {
@@ -1237,6 +1495,7 @@ const savedVerbsMode = localStorage.getItem("rulearn-verbs-mode") || "learn";
 const savedNumbersMode = localStorage.getItem("rulearn-numbers-mode") || "learn";
 const savedDaysMode = localStorage.getItem("rulearn-days-mode") || "learn";
 const savedMonthsMode = localStorage.getItem("rulearn-months-mode") || "learn";
+const savedOppositesMode = localStorage.getItem("rulearn-opposites-mode") || "learn";
 
 // Restore modes
 if (savedVerbsMode === "test") {
@@ -1263,6 +1522,12 @@ if (savedMonthsMode === "test") {
   btnMonthsModeLearn.click();
 }
 
+if (savedOppositesMode === "test") {
+  btnOppositesModeTest.click();
+} else {
+  btnOppositesModeLearn.click();
+}
+
 // Restore tab
 if (savedTab === "nav-numbers") {
   navNumbers.click();
@@ -1270,6 +1535,8 @@ if (savedTab === "nav-numbers") {
   navDays.click();
 } else if (savedTab === "nav-months") {
   navMonths.click();
+} else if (savedTab === "nav-opposites") {
+  navOpposites.click();
 } else if (savedTab === "nav-learned") {
   navLearned.click();
 } else {
