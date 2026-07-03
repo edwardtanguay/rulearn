@@ -16,6 +16,10 @@
         <span class="app-title">learn russian</span>
         <span style="font-size: 0.65rem; color: var(--text-muted); font-weight: 500;">(see more projects by <a href="https://tanguay.info" target="_blank" style="color: var(--accent-color); text-decoration: underline;">Edward</a>)</span>
       </div>
+      <!-- Global Search -->
+      <div class="search-container" style="width: 100%; margin-top: 4px; margin-bottom: 4px;">
+        <input type="text" id="global-search" placeholder="Search verbs and numbers..." style="width: 100%; padding: 8px 16px; background-color: var(--card-bg); border: 1px solid var(--card-border); border-radius: 9999px; color: var(--text-primary); font-family: var(--font-family); font-size: 0.85rem; outline: none; transition: border-color 0.2s;" />
+      </div>
       <nav class="app-nav">
         <button id="nav-verbs" class="nav-link active">verbs</button>
         <button id="nav-numbers" class="nav-link">numbers</button>
@@ -29,6 +33,14 @@
     </header>
 
     <main class="app-main">
+      <!-- Search Results Page -->
+      <section id="page-search-results" class="page-section" style="overflow-y: auto;">
+        <h3 id="search-results-title" style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.15em; margin-bottom: 12px; border-bottom: 1px solid var(--card-border); padding-bottom: 8px; font-weight: 600;">0 matches found</h3>
+        <div id="search-results-list" class="verbs-list">
+          <!-- Matching rows will go here -->
+        </div>
+      </section>
+
       <!-- Verbs Page -->
       <section id="page-verbs" class="page-section active">
         <div class="mode-selector">

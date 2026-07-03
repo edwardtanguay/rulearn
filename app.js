@@ -109,6 +109,12 @@ const btnResetVerbs = document.getElementById("btn-reset-verbs");
 const btnResetNumbers = document.getElementById("btn-reset-numbers");
 const btnResetAll = document.getElementById("btn-reset-all");
 
+// DOM Elements - Global Search
+const globalSearch = document.getElementById("global-search");
+const pageSearchResults = document.getElementById("page-search-results");
+const searchResultsTitle = document.getElementById("search-results-title");
+const searchResultsList = document.getElementById("search-results-list");
+
 // Storage Helpers
 function isLearned(type, id) {
   return localStorage.getItem(`${type}-${id}`) === "true";
@@ -211,16 +217,22 @@ function shuffle(array) {
 
 // Page Navigation
 navVerbs.addEventListener("click", () => {
+  globalSearch.value = "";
+  pageSearchResults.classList.remove("active");
   setActivePage(navVerbs, pageVerbs);
   initVerbsView();
 });
 
 navNumbers.addEventListener("click", () => {
+  globalSearch.value = "";
+  pageSearchResults.classList.remove("active");
   setActivePage(navNumbers, pageNumbers);
   initNumbersView();
 });
 
 navLearned.addEventListener("click", () => {
+  globalSearch.value = "";
+  pageSearchResults.classList.remove("active");
   setActivePage(navLearned, pageLearned);
   renderLearnedPage();
 });
@@ -605,6 +617,121 @@ btnResetNumbers.addEventListener("click", (e) => {
     renderLearnedPage();
   }
 });
+
+// Search Row Click Event Helper
+window.toggleSearchRowState = function(e, type, id) {
+  const nextState = !isLearned(type, id);
+  setLearned(type, id, nextState);
+  
+  const card = e.currentTarget;
+  card.classList.toggle("row-learned", nextState);
+  
+  const btn = card.querySelector(".learned-toggle");
+  if (btn) {
+    btn.classList.toggle("is-learned", nextState);
+  }
+  updateProgressSummary();
+};
+
+// Global Search Event Handler & Renderer
+globalSearch.addEventListener("input", (e) => {
+  const query = e.target.value.trim().toLowerCase();
+  if (query === "") {
+    pageSearchResults.classList.remove("active");
+    const activeNav = document.querySelector(".app-nav .nav-link.active");
+    if (activeNav) {
+      if (activeNav.id === "nav-verbs") {
+        pageVerbs.classList.add("active");
+      } else if (activeNav.id === "nav-numbers") {
+        pageNumbers.classList.add("active");
+      } else if (activeNav.id === "nav-learned") {
+        pageLearned.classList.add("active");
+      }
+    }
+    updateProgressSummary();
+  } else {
+    [pageVerbs, pageNumbers, pageLearned].forEach(page => page.classList.remove("active"));
+    pageSearchResults.classList.add("active");
+    const summaryContainer = document.querySelector(".app-progress-summary");
+    if (summaryContainer) summaryContainer.style.display = "none";
+    performGlobalSearch(query);
+  }
+});
+
+function performGlobalSearch(query) {
+  const matchVerbs = verbs.filter(v => 
+    v.russian.toLowerCase().includes(query) || 
+    v.english.toLowerCase().includes(query)
+  );
+
+  const matchNums = [];
+  for (let i = 1; i <= 100; i++) {
+    const ruSpelling = getRussianNumber(i);
+    if (i.toString().includes(query) || ruSpelling.toLowerCase().includes(query)) {
+      matchNums.push({ val: i, ru: ruSpelling });
+    }
+  }
+
+  const totalMatches = matchVerbs.length + matchNums.length;
+  searchResultsTitle.textContent = `${totalMatches} matches found`;
+
+  let html = "";
+  
+  // Verbs results
+  matchVerbs.forEach(verb => {
+    const isL = isLearned("verb", verb.id);
+    const translateUrl = getTranslateUrl(verb.russian);
+    html += `
+      <div class="verb-card ${isL ? 'row-learned' : ''}" onclick="toggleSearchRowState(event, 'verb', ${verb.id})">
+        <div class="verb-row-left" style="display: flex; align-items: baseline; gap: 8px; flex-grow: 1; min-width: 0;">
+          <span class="verb-number" style="background: none; padding: 0; font-size: 0.85rem; font-weight: 500; min-width: 24px; flex-shrink: 0;">${verb.id}.</span>
+          <div style="display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px; min-width: 0;">
+            <strong style="color: var(--text-primary); font-size: 1rem; font-weight: 600; white-space: nowrap;">${verb.russian}</strong>
+            <span style="color: var(--text-secondary); font-size: 0.85rem;">${verb.english}</span>
+          </div>
+        </div>
+        <div class="verb-actions" style="gap: 16px; flex-shrink: 0;">
+          <a href="${translateUrl}" target="_blank" class="listen-link" onclick="event.stopPropagation();" style="color: var(--accent-color); text-decoration: none; font-size: 1.1rem; padding: 8px;">
+            🔊
+          </a>
+          <button class="learned-toggle ${isL ? 'is-learned' : ''}" style="padding: 8px 12px; pointer-events: none;">
+            ✔
+          </button>
+        </div>
+      </div>
+    `;
+  });
+
+  // Numbers results
+  matchNums.forEach(num => {
+    const isL = isLearned("number", num.val);
+    const translateUrl = getTranslateUrl(num.ru);
+    html += `
+      <div class="verb-card ${isL ? 'row-learned' : ''}" onclick="toggleSearchRowState(event, 'number', ${num.val})">
+        <div class="verb-row-left" style="display: flex; align-items: baseline; gap: 8px; flex-grow: 1; min-width: 0;">
+          <span class="verb-number" style="background: none; padding: 0; font-size: 0.95rem; font-weight: 600; color: var(--text-primary); min-width: 24px; flex-shrink: 0;">${num.val}</span>
+          <div style="display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px; min-width: 0;">
+            <span style="color: var(--text-secondary); font-size: 0.85rem;">${num.ru}</span>
+          </div>
+        </div>
+        <div class="verb-actions" style="gap: 16px; flex-shrink: 0;">
+          <a href="${translateUrl}" target="_blank" class="listen-link" onclick="event.stopPropagation();" style="color: var(--accent-color); text-decoration: none; font-size: 1.1rem; padding: 8px;">
+            🔊
+          </a>
+          <button class="learned-toggle ${isL ? 'is-learned' : ''}" style="padding: 8px 12px; pointer-events: none;">
+            ✔
+          </button>
+        </div>
+      </div>
+    `;
+  });
+
+  if (html === "") {
+    searchResultsList.innerHTML = `<span style="color: var(--text-muted); font-style: italic; padding: 16px; display: block; text-align: center;">No matches found. Try another query!</span>`;
+  } else {
+    searchResultsList.innerHTML = html;
+  }
+}
 
 // App Entry Point
 updateProgressSummary();
