@@ -71,6 +71,7 @@ const verbsList = document.getElementById("verbs-list");
 const testCard = document.getElementById("test-card");
 const testEnglish = document.getElementById("test-english");
 const testRussian = document.getElementById("test-russian");
+const testCardLabel = document.getElementById("test-card-label");
 const testPronunciation = document.getElementById("test-pronunciation");
 const testExampleContainer = document.getElementById("test-example-container");
 const testExample = document.getElementById("test-example");
@@ -166,6 +167,7 @@ function loadTestVerb() {
   const verb = verbs[verbIndex];
 
   testEnglish.textContent = verb.english;
+  testCardLabel.textContent = `verb #${verb.id}`;
   testRussian.textContent = verb.russian;
   testPronunciation.textContent = verb.pron;
 
