@@ -107,6 +107,7 @@ const learnedNumbersTitle = document.getElementById("learned-numbers-title");
 const learnedNumbersListCsv = document.getElementById("learned-numbers-list-csv");
 const btnResetVerbs = document.getElementById("btn-reset-verbs");
 const btnResetNumbers = document.getElementById("btn-reset-numbers");
+const btnResetAll = document.getElementById("btn-reset-all");
 
 // Storage Helpers
 function isLearned(type, id) {
@@ -571,9 +572,23 @@ function renderLearnedPage() {
 }
 
 // Reset Handlers
+btnResetAll.addEventListener("click", (e) => {
+  e.preventDefault();
+  if (confirm("Are you sure you want to reset all learned verbs AND numbers?")) {
+    // Clear verbs
+    verbs.forEach(v => localStorage.removeItem(`verb-${v.id}`));
+    // Clear numbers
+    for (let i = 1; i <= 100; i++) {
+      localStorage.removeItem(`number-${i}`);
+    }
+    updateProgressSummary();
+    renderLearnedPage();
+  }
+});
+
 btnResetVerbs.addEventListener("click", (e) => {
   e.preventDefault();
-  if (confirm("Are you sure you want to reset all learned verbs?")) {
+  if (confirm("Are you sure you want to reset only learned verbs?")) {
     verbs.forEach(v => localStorage.removeItem(`verb-${v.id}`));
     updateProgressSummary();
     renderLearnedPage();
@@ -582,7 +597,7 @@ btnResetVerbs.addEventListener("click", (e) => {
 
 btnResetNumbers.addEventListener("click", (e) => {
   e.preventDefault();
-  if (confirm("Are you sure you want to reset all learned numbers?")) {
+  if (confirm("Are you sure you want to reset only learned numbers?")) {
     for (let i = 1; i <= 100; i++) {
       localStorage.removeItem(`number-${i}`);
     }
