@@ -320,12 +320,12 @@ function initVerbsView() {
   verbsList.innerHTML = verbs.map(verb => {
     const isL = isLearned("verb", verb.id);
     return `
-      <div class="verb-card ${isL ? 'row-learned' : ''}">
+      <div class="verb-card ${isL ? 'row-learned' : ''}" onclick="toggleRowState(event, 'verb', ${verb.id})">
         <div class="verb-row-left" style="display: flex; align-items: center; gap: 8px;">
           <span class="verb-number" style="background: none; padding: 0; font-size: 0.85rem; font-weight: 500;">${verb.id}.</span>
           <strong style="color: var(--text-primary); font-size: 1rem; font-weight: 600;">${verb.russian}</strong>
         </div>
-        <button class="learned-toggle ${isL ? 'is-learned' : ''}" onclick="toggleListItemState(event, 'verb', ${verb.id})" style="padding: 8px 12px;">
+        <button class="learned-toggle ${isL ? 'is-learned' : ''}" style="padding: 8px 12px; pointer-events: none;">
           ✔
         </button>
       </div>
@@ -340,15 +340,15 @@ function initNumbersView() {
     const translateUrl = getTranslateUrl(ruSpelling);
     const isL = isLearned("number", i);
     numberCards.push(`
-      <div class="verb-card ${isL ? 'row-learned' : ''}">
+      <div class="verb-card ${isL ? 'row-learned' : ''}" onclick="toggleRowState(event, 'number', ${i})">
         <div class="verb-row-left" style="display: flex; align-items: center; gap: 8px;">
           <span class="verb-number" style="background: none; padding: 0; font-size: 0.95rem; font-weight: 600; color: var(--text-primary);">${i}</span>
         </div>
         <div class="verb-actions" style="gap: 16px;">
-          <a href="${translateUrl}" target="_blank" class="listen-link" style="color: var(--accent-color); text-decoration: none; font-size: 1.1rem; padding: 8px;">
+          <a href="${translateUrl}" target="_blank" class="listen-link" onclick="event.stopPropagation();" style="color: var(--accent-color); text-decoration: none; font-size: 1.1rem; padding: 8px;">
             🔊
           </a>
-          <button class="learned-toggle ${isL ? 'is-learned' : ''}" onclick="toggleListItemState(event, 'number', ${i})" style="padding: 8px 12px;">
+          <button class="learned-toggle ${isL ? 'is-learned' : ''}" style="padding: 8px 12px; pointer-events: none;">
             ✔
           </button>
         </div>
@@ -358,13 +358,30 @@ function initNumbersView() {
   numbersList.innerHTML = numberCards.join('');
 }
 
-// Global toggle dispatcher for in-list star buttons
+// Row toggling helper (whole card click target)
+window.toggleRowState = function(e, type, id) {
+  const nextState = !isLearned(type, id);
+  setLearned(type, id, nextState);
+  
+  const card = e.currentTarget;
+  card.classList.toggle("row-learned", nextState);
+  
+  const btn = card.querySelector(".learned-toggle");
+  if (btn) {
+    updateToggleUI(btn, nextState);
+  }
+  
+  if (pageLearned.classList.contains("active")) {
+    renderLearnedPage();
+  }
+};
+
+// Global toggle dispatcher for in-list star buttons & click-to-unlearn triggers
 window.toggleListItemState = function(e, type, id) {
   e.stopPropagation();
   const nextState = !isLearned(type, id);
   setLearned(type, id, nextState);
   
-  // Re-target button states
   const btn = e.currentTarget;
   updateToggleUI(btn, nextState);
   
@@ -492,7 +509,7 @@ function renderLearnedPage() {
     learnedVerbsListCsv.innerHTML = learnedVerbs.map(verb => `
       <span class="learned-csv-item" onclick="toggleRevealLearned(this)">
         <span class="learned-val">${verb.russian}</span>
-        <span class="learned-ans" style="display: none; color: #10b981; margin-left: 6px; font-weight: 600;">${verb.english}<sub style="color: var(--text-muted); font-size: 0.65rem; margin-left: 4px; font-weight: normal; vertical-align: sub;">${verb.id}</sub></span>
+        <span class="learned-ans" style="display: none; color: #10b981; margin-left: 6px; font-weight: 600;"><span style="color: var(--text-muted); font-weight: normal; margin-right: 4px; font-size: 0.72rem;">${verb.id}:</span>${verb.english}</span>
         <span class="unlearn-x" onclick="event.stopPropagation(); toggleListItemState(event, 'verb', ${verb.id});" title="unlearn" style="display: none; color: #ef4444; margin-left: 10px; cursor: pointer; font-weight: bold; font-size: 1rem; padding: 0 4px;">✖</span>
       </span>
     `).join('');
@@ -517,7 +534,7 @@ function renderLearnedPage() {
       return `
         <span class="learned-csv-item" onclick="toggleRevealLearned(this)">
           <span class="learned-val">${i}</span>
-          <span class="learned-ans" style="display: none; color: #10b981; margin-left: 6px; font-weight: 600;">${ruSpelling}<sub style="color: var(--text-muted); font-size: 0.65rem; margin-left: 4px; font-weight: normal; vertical-align: sub;">${i}</sub></span>
+          <span class="learned-ans" style="display: none; color: #10b981; margin-left: 6px; font-weight: 600;">${ruSpelling}</span>
           <span class="unlearn-x" onclick="event.stopPropagation(); toggleListItemState(event, 'number', ${i});" title="unlearn" style="display: none; color: #ef4444; margin-left: 10px; cursor: pointer; font-weight: bold; font-size: 1rem; padding: 0 4px;">✖</span>
         </span>
       `;
