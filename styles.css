@@ -540,7 +540,7 @@ body {
   font-size: 0.85rem;
   color: var(--text-primary);
   font-weight: 500;
-  transition: all 0.15s ease;
+  transition: all 0.2s ease;
   user-select: none;
   -webkit-tap-highlight-color: transparent;
   display: inline-flex;
@@ -550,10 +550,18 @@ body {
 }
 
 .learned-csv-item:hover,
-.learned-csv-item:active {
-  background-color: rgba(239, 68, 68, 0.12);
-  border-color: rgba(239, 68, 68, 0.25);
-  color: #ef4444 !important;
+.learned-csv-item.is-revealed {
+  background-color: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+.unlearn-x {
+  transition: transform 0.15s ease, opacity 0.15s ease;
+}
+
+.unlearn-x:hover {
+  transform: scale(1.3);
+  opacity: 0.8;
 }
 
 

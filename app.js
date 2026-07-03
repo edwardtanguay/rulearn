@@ -456,6 +456,20 @@ function nextTestNum() {
   }
 }
 
+// Click to reveal answer logic inside learned tags
+window.toggleRevealLearned = function(el) {
+  el.classList.toggle("is-revealed");
+  const ans = el.querySelector(".learned-ans");
+  const x = el.querySelector(".unlearn-x");
+  if (el.classList.contains("is-revealed")) {
+    ans.style.display = "inline";
+    x.style.display = "inline-block";
+  } else {
+    ans.style.display = "none";
+    x.style.display = "none";
+  }
+};
+
 // Render Learned Page Lists
 function renderLearnedPage() {
   // Learned Verbs
@@ -467,8 +481,10 @@ function renderLearnedPage() {
   } else {
     // Generate inline elements without comma separators
     learnedVerbsListCsv.innerHTML = learnedVerbs.map(verb => `
-      <span class="learned-csv-item" onclick="toggleListItemState(event, 'verb', ${verb.id})" title="Click to unlearn">
-        ${verb.russian}
+      <span class="learned-csv-item" onclick="toggleRevealLearned(this)">
+        <span class="learned-val">${verb.russian}</span>
+        <span class="learned-ans" style="display: none; color: #10b981; margin-left: 6px; font-weight: 600;">(${verb.english})</span>
+        <span class="unlearn-x" onclick="event.stopPropagation(); toggleListItemState(event, 'verb', ${verb.id});" title="unlearn" style="display: none; color: #ef4444; margin-left: 10px; cursor: pointer; font-weight: bold; font-size: 1rem; padding: 0 4px;">✖</span>
       </span>
     `).join('');
   }
@@ -487,11 +503,16 @@ function renderLearnedPage() {
     learnedNumbersListCsv.innerHTML = `<span style="color: var(--text-muted); font-style: italic;">No numbers learned yet.</span>`;
   } else {
     // Generate inline elements without comma separators
-    learnedNumbersListCsv.innerHTML = learnedNums.map(i => `
-      <span class="learned-csv-item" onclick="toggleListItemState(event, 'number', ${i})" title="Click to unlearn">
-        ${i}
-      </span>
-    `).join('');
+    learnedNumbersListCsv.innerHTML = learnedNums.map(i => {
+      const ruSpelling = getRussianNumber(i);
+      return `
+        <span class="learned-csv-item" onclick="toggleRevealLearned(this)">
+          <span class="learned-val">${i}</span>
+          <span class="learned-ans" style="display: none; color: #10b981; margin-left: 6px; font-weight: 600;">(${ruSpelling})</span>
+          <span class="unlearn-x" onclick="event.stopPropagation(); toggleListItemState(event, 'number', ${i});" title="unlearn" style="display: none; color: #ef4444; margin-left: 10px; cursor: pointer; font-weight: bold; font-size: 1rem; padding: 0 4px;">✖</span>
+        </span>
+      `;
+    }).join('');
   }
 }
 
