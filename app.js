@@ -192,6 +192,7 @@ const btnResetAll = document.getElementById("btn-reset-all");
 
 // DOM Elements - Global Search
 const globalSearch = document.getElementById("global-search");
+const clearSearch = document.getElementById("clear-search");
 const pageSearchResults = document.getElementById("page-search-results");
 const searchResultsTitle = document.getElementById("search-results-title");
 const searchResultsList = document.getElementById("search-results-list");
@@ -361,6 +362,8 @@ navLearned.addEventListener("click", () => {
 });
 
 function setActivePage(navBtn, pageEl) {
+  globalSearch.value = "";
+  if (clearSearch) clearSearch.style.display = "none";
   [navVerbs, navNumbers, navDays, navMonths, navLearned].forEach(btn => btn.classList.remove("active"));
   [pageVerbs, pageNumbers, pageDays, pageMonths, pageLearned].forEach(page => page.classList.remove("active"));
   navBtn.classList.add("active");
@@ -1042,6 +1045,7 @@ window.toggleSearchRowState = function(e, type, id) {
 globalSearch.addEventListener("input", (e) => {
   const query = e.target.value.trim().toLowerCase();
   if (query === "") {
+    clearSearch.style.display = "none";
     pageSearchResults.classList.remove("active");
     const activeNav = document.querySelector(".app-nav .nav-link.active");
     if (activeNav) {
@@ -1059,12 +1063,34 @@ globalSearch.addEventListener("input", (e) => {
     }
     updateProgressSummary();
   } else {
+    clearSearch.style.display = "inline-flex";
     [pageVerbs, pageNumbers, pageDays, pageMonths, pageLearned].forEach(page => page.classList.remove("active"));
     pageSearchResults.classList.add("active");
     const summaryContainer = document.querySelector(".app-progress-summary");
     if (summaryContainer) summaryContainer.style.display = "none";
     performGlobalSearch(query);
   }
+});
+
+clearSearch.addEventListener("click", () => {
+  globalSearch.value = "";
+  clearSearch.style.display = "none";
+  pageSearchResults.classList.remove("active");
+  const activeNav = document.querySelector(".app-nav .nav-link.active");
+  if (activeNav) {
+    if (activeNav.id === "nav-verbs") {
+      pageVerbs.classList.add("active");
+    } else if (activeNav.id === "nav-numbers") {
+      pageNumbers.classList.add("active");
+    } else if (activeNav.id === "nav-days") {
+      pageDays.classList.add("active");
+    } else if (activeNav.id === "nav-months") {
+      pageMonths.classList.add("active");
+    } else if (activeNav.id === "nav-learned") {
+      pageLearned.classList.add("active");
+    }
+  }
+  updateProgressSummary();
 });
 
 function performGlobalSearch(query) {
