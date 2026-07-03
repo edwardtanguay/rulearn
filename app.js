@@ -52,7 +52,8 @@ const verbs = [
   { id: 50, english: "to notice", russian: "заметить", pron: "[zahm-YEH-tit]" },
   { id: 51, english: "to read", russian: "читать", pron: "[chee-TAHT]" },
   { id: 52, english: "to eat", russian: "есть", pron: "[yehst]" },
-  { id: 53, english: "to drink", russian: "пить", pron: "[peet]" }
+  { id: 53, english: "to drink", russian: "пить", pron: "[peet]" },
+  { id: 54, english: "to fly", russian: "летать", pron: "[lye-TAHT]" }
 ];
 
 // Russian Days of the Week Data

@@ -164,7 +164,7 @@ body.loaded {
   flex-grow: 1;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
-  padding-bottom: 24px;
+  padding-bottom: 64px;
 }
 
 .view-content.active {
