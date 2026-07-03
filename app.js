@@ -116,6 +116,20 @@ function setLearned(type, id, value) {
   } else {
     localStorage.removeItem(`${type}-${id}`);
   }
+  updateProgressSummary();
+}
+
+// Progress summary manager
+function updateProgressSummary() {
+  const learnedVerbsCount = verbs.filter(v => isLearned("verb", v.id)).length;
+  
+  let learnedNumsCount = 0;
+  for (let i = 1; i <= 100; i++) {
+    if (isLearned("number", i)) learnedNumsCount++;
+  }
+  
+  document.getElementById("progress-verbs").textContent = `${learnedVerbsCount} of 50 learned`;
+  document.getElementById("progress-numbers").textContent = `${learnedNumsCount} of 100 learned`;
 }
 
 // Toggle Helper UI
@@ -336,7 +350,12 @@ window.toggleListItemState = function(e, type, id) {
 
 // Verbs Testing Logic
 function startNewTest() {
-  testOrder = shuffle(verbs.map((_, index) => index));
+  let testList = verbs.filter(v => !isLearned("verb", v.id));
+  if (testList.length === 0) {
+    alert("You've learned all 50 verbs! Testing on all verbs instead.");
+    testList = verbs;
+  }
+  testOrder = shuffle(testList.map(v => verbs.indexOf(v)));
   currentTestIndex = 0;
   loadTestVerb();
 }
@@ -365,8 +384,8 @@ function loadTestVerb() {
 
 function nextTestVerb() {
   currentTestIndex++;
-  if (currentTestIndex >= verbs.length) {
-    alert("You completed all 50 verbs! Starting another randomized test run.");
+  if (currentTestIndex >= testOrder.length) {
+    alert("You completed the active verbs list! Starting another randomized run.");
     startNewTest();
   } else {
     loadTestVerb();
@@ -376,7 +395,12 @@ function nextTestVerb() {
 // Numbers Testing Logic
 function startNewNumTest() {
   const numRange = Array.from({ length: 100 }, (_, i) => i + 1);
-  testNumOrder = shuffle(numRange);
+  let testList = numRange.filter(n => !isLearned("number", n));
+  if (testList.length === 0) {
+    alert("You've learned all 100 numbers! Testing on all numbers instead.");
+    testList = numRange;
+  }
+  testNumOrder = shuffle(testList);
   currentNumTestIndex = 0;
   loadTestNum();
 }
@@ -399,7 +423,7 @@ function loadTestNum() {
 function nextTestNum() {
   currentNumTestIndex++;
   if (currentNumTestIndex >= testNumOrder.length) {
-    alert("You completed all numbers! Starting another randomized test run.");
+    alert("You completed the active numbers list! Starting another randomized run.");
     startNewNumTest();
   } else {
     loadTestNum();
@@ -473,6 +497,7 @@ btnResetVerbs.addEventListener("click", (e) => {
   e.preventDefault();
   if (confirm("Are you sure you want to reset all learned verbs?")) {
     verbs.forEach(v => localStorage.removeItem(`verb-${v.id}`));
+    updateProgressSummary();
     renderLearnedPage();
   }
 });
@@ -483,9 +508,11 @@ btnResetNumbers.addEventListener("click", (e) => {
     for (let i = 1; i <= 100; i++) {
       localStorage.removeItem(`number-${i}`);
     }
+    updateProgressSummary();
     renderLearnedPage();
   }
 });
 
 // App Entry Point
+updateProgressSummary();
 initVerbsView();

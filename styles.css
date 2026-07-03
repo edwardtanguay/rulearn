@@ -488,4 +488,21 @@ body {
   gap: 12px;
 }
 
+/* Progress bar header styles */
+.app-progress-summary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+  font-size: 0.72rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+  letter-spacing: 0.05em;
+}
+
+.progress-divider {
+  color: var(--text-muted);
+  opacity: 0.5;
+}
+
 
