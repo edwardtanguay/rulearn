@@ -492,7 +492,7 @@ function renderLearnedPage() {
     learnedVerbsListCsv.innerHTML = learnedVerbs.map(verb => `
       <span class="learned-csv-item" onclick="toggleRevealLearned(this)">
         <span class="learned-val">${verb.russian}</span>
-        <span class="learned-ans" style="display: none; color: #10b981; margin-left: 6px; font-weight: 600;">${verb.english}</span>
+        <span class="learned-ans" style="display: none; color: #10b981; margin-left: 6px; font-weight: 600;">${verb.english}<sub style="color: var(--text-muted); font-size: 0.65rem; margin-left: 4px; font-weight: normal; vertical-align: sub;">${verb.id}</sub></span>
         <span class="unlearn-x" onclick="event.stopPropagation(); toggleListItemState(event, 'verb', ${verb.id});" title="unlearn" style="display: none; color: #ef4444; margin-left: 10px; cursor: pointer; font-weight: bold; font-size: 1rem; padding: 0 4px;">✖</span>
       </span>
     `).join('');
@@ -517,7 +517,7 @@ function renderLearnedPage() {
       return `
         <span class="learned-csv-item" onclick="toggleRevealLearned(this)">
           <span class="learned-val">${i}</span>
-          <span class="learned-ans" style="display: none; color: #10b981; margin-left: 6px; font-weight: 600;">${ruSpelling}</span>
+          <span class="learned-ans" style="display: none; color: #10b981; margin-left: 6px; font-weight: 600;">${ruSpelling}<sub style="color: var(--text-muted); font-size: 0.65rem; margin-left: 4px; font-weight: normal; vertical-align: sub;">${i}</sub></span>
           <span class="unlearn-x" onclick="event.stopPropagation(); toggleListItemState(event, 'number', ${i});" title="unlearn" style="display: none; color: #ef4444; margin-left: 10px; cursor: pointer; font-weight: bold; font-size: 1rem; padding: 0 4px;">✖</span>
         </span>
       `;
