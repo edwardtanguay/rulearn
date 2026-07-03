@@ -122,21 +122,21 @@
 
       <!-- Learned Page -->
       <section id="page-learned" class="page-section">
-        <div class="learned-header" style="margin-bottom: 12px; border-bottom: 1px solid var(--card-border); padding-bottom: 8px;">
-          <h3 style="font-size: 1.1rem; color: #10b981;">Learned Verbs</h3>
-        </div>
-        <div id="learned-verbs-list" class="verbs-list" style="margin-bottom: 24px;">
-          <!-- Learned verbs listed here -->
-        </div>
-
-        <div class="learned-header" style="margin-bottom: 12px; border-bottom: 1px solid var(--card-border); padding-bottom: 8px;">
-          <h3 style="font-size: 1.1rem; color: #10b981;">Learned Numbers</h3>
-        </div>
-        <div id="learned-numbers-list" class="verbs-list">
-          <!-- Learned numbers listed here -->
+        <div class="learned-section" style="margin-bottom: 24px;">
+          <h3 id="learned-verbs-title" style="font-size: 1.1rem; color: #10b981; margin-bottom: 12px; border-bottom: 1px solid var(--card-border); padding-bottom: 8px;">0 Learned Verbs</h3>
+          <div id="learned-verbs-list-csv" style="font-size: 0.95rem; line-height: 1.8; color: var(--text-secondary); word-wrap: break-word; padding: 4px;">
+            <!-- Comma-separated list will go here -->
+          </div>
         </div>
 
-        <div class="reset-controls" style="display: flex; justify-content: center; gap: 20px; margin-top: 32px; border-top: 1px solid var(--card-border); padding-top: 16px;">
+        <div class="learned-section" style="margin-bottom: 24px;">
+          <h3 id="learned-numbers-title" style="font-size: 1.1rem; color: #10b981; margin-bottom: 12px; border-bottom: 1px solid var(--card-border); padding-bottom: 8px;">0 Learned Numbers</h3>
+          <div id="learned-numbers-list-csv" style="font-size: 0.95rem; line-height: 1.8; color: var(--text-secondary); word-wrap: break-word; padding: 4px;">
+            <!-- Comma-separated list will go here -->
+          </div>
+        </div>
+
+        <div class="reset-controls" style="display: flex; justify-content: center; gap: 20px; margin-top: auto; border-top: 1px solid var(--card-border); padding-top: 16px;">
           <a href="#" id="btn-reset-verbs" style="color: var(--text-muted); font-size: 0.8rem; text-decoration: underline;">Reset all verbs</a>
           <a href="#" id="btn-reset-numbers" style="color: var(--text-muted); font-size: 0.8rem; text-decoration: underline;">Reset all numbers</a>
         </div>

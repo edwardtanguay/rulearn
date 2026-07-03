@@ -100,8 +100,10 @@ const testNumToggleFront = document.getElementById("test-num-toggle-front");
 const testNumToggleBack = document.getElementById("test-num-toggle-back");
 
 // DOM Elements - Learned Page View
-const learnedVerbsList = document.getElementById("learned-verbs-list");
-const learnedNumbersList = document.getElementById("learned-numbers-list");
+const learnedVerbsTitle = document.getElementById("learned-verbs-title");
+const learnedVerbsListCsv = document.getElementById("learned-verbs-list-csv");
+const learnedNumbersTitle = document.getElementById("learned-numbers-title");
+const learnedNumbersListCsv = document.getElementById("learned-numbers-list-csv");
 const btnResetVerbs = document.getElementById("btn-reset-verbs");
 const btnResetNumbers = document.getElementById("btn-reset-numbers");
 
@@ -457,20 +459,17 @@ function nextTestNum() {
 function renderLearnedPage() {
   // Learned Verbs
   const learnedVerbs = verbs.filter(verb => isLearned("verb", verb.id));
+  learnedVerbsTitle.textContent = `${learnedVerbs.length} Learned Verbs`;
+  
   if (learnedVerbs.length === 0) {
-    learnedVerbsList.innerHTML = `<div class="verb-card" style="text-align: center; color: var(--text-muted); justify-content: center;">No verbs learned yet.</div>`;
+    learnedVerbsListCsv.innerHTML = `<span style="color: var(--text-muted); font-style: italic;">No verbs learned yet.</span>`;
   } else {
-    learnedVerbsList.innerHTML = learnedVerbs.map(verb => `
-      <div class="verb-card">
-        <div class="verb-row-left" style="display: flex; align-items: center; gap: 8px;">
-          <span class="verb-number" style="background: none; padding: 0; font-size: 0.85rem; font-weight: 500;">${verb.id}.</span>
-          <strong style="color: var(--text-primary); font-size: 1rem; font-weight: 600;">${verb.russian}</strong>
-        </div>
-        <button class="learned-toggle is-learned" onclick="toggleListItemState(event, 'verb', ${verb.id})" style="padding: 8px 12px;">
-          ✔
-        </button>
-      </div>
-    `).join('');
+    // Generate inline elements with comma separators
+    learnedVerbsListCsv.innerHTML = learnedVerbs.map(verb => `
+      <span class="learned-csv-item" onclick="toggleListItemState(event, 'verb', ${verb.id})" style="cursor: pointer; text-decoration: underline; color: #10b981; font-weight: 500; transition: opacity 0.2s;" title="Click to unlearn">
+        ${verb.russian}
+      </span>
+    `).join(', ');
   }
 
   // Learned Numbers
@@ -480,29 +479,18 @@ function renderLearnedPage() {
       learnedNums.push(i);
     }
   }
+  
+  learnedNumbersTitle.textContent = `${learnedNums.length} Learned Numbers`;
 
   if (learnedNums.length === 0) {
-    learnedNumbersList.innerHTML = `<div class="verb-card" style="text-align: center; color: var(--text-muted); justify-content: center;">No numbers learned yet.</div>`;
+    learnedNumbersListCsv.innerHTML = `<span style="color: var(--text-muted); font-style: italic;">No numbers learned yet.</span>`;
   } else {
-    learnedNumbersList.innerHTML = learnedNums.map(i => {
-      const ruSpelling = getRussianNumber(i);
-      const translateUrl = getTranslateUrl(ruSpelling);
-      return `
-        <div class="verb-card">
-          <div class="verb-row-left" style="display: flex; align-items: center; gap: 8px;">
-            <span class="verb-number" style="background: none; padding: 0; font-size: 0.95rem; font-weight: 600; color: var(--text-primary);">${i}</span>
-          </div>
-          <div class="verb-actions" style="gap: 16px;">
-            <a href="${translateUrl}" target="_blank" class="listen-link" style="color: var(--accent-color); text-decoration: none; font-size: 1.1rem; padding: 8px;">
-              🔊
-            </a>
-            <button class="learned-toggle is-learned" onclick="toggleListItemState(event, 'number', ${i})" style="padding: 8px 12px;">
-              ✔
-            </button>
-          </div>
-        </div>
-      `;
-    }).join('');
+    // Generate inline elements with comma separators
+    learnedNumbersListCsv.innerHTML = learnedNums.map(i => `
+      <span class="learned-csv-item" onclick="toggleListItemState(event, 'number', ${i})" style="cursor: pointer; text-decoration: underline; color: #10b981; font-weight: 500; transition: opacity 0.2s;" title="Click to unlearn">
+        ${i}
+      </span>
+    `).join(', ');
   }
 }
 
