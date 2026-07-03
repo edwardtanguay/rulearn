@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Learn Russian - Verbs</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="app-container">
+    <header class="app-header">
+      <span class="app-title">learn russian</span>
+      <nav class="app-nav">
+        <button id="nav-verbs" class="nav-link active">verbs</button>
+        <button id="nav-about" class="nav-link">about</button>
+      </nav>
+    </header>
+
+    <main class="app-main">
+      <!-- Verbs Page -->
+      <section id="page-verbs" class="page-section active">
+        <div class="mode-selector">
+          <button id="btn-mode-learn" class="mode-btn active">learn</button>
+          <button id="btn-mode-test" class="mode-btn">test</button>
+        </div>
+
+        <!-- Learn Mode View -->
+        <div id="view-learn" class="view-content active">
+          <div id="verbs-list" class="verbs-list">
+            <!-- Dynamic list of verbs will go here -->
+          </div>
+        </div>
+
+        <!-- Test Mode View -->
+        <div id="view-test" class="view-content">
+          <div class="test-card-container">
+            <div id="test-card" class="test-card">
+              <div class="card-inner">
+                <div class="card-front">
+                  <span class="card-label">English</span>
+                  <h2 id="test-english" class="verb-meaning">to be able to</h2>
+                  <span class="tap-hint">Tap to reveal</span>
+                </div>
+                <div class="card-back">
+                  <span class="card-label">Russian</span>
+                  <h2 id="test-russian" class="verb-cyrillic">мочь</h2>
+                  <div class="pronunciation-badge">
+                    <span id="test-pronunciation">[much]</span>
+                  </div>
+                  <div id="test-example-container" class="example-container">
+                    <span class="card-label">Example</span>
+                    <p id="test-example" class="verb-example">я хочу говорить по-русски</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <button id="btn-next-test" class="action-btn next-btn">Next Verb</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- About Page -->
+      <section id="page-about" class="page-section">
+        <div class="about-card">
+          <h2>About Learn Russian</h2>
+          <p class="about-text">A simple, interactive mobile application designed to help you study and test yourself on the 50 most common Russian verbs.</p>
+        </div>
+      </section>
+    </main>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>
