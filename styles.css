@@ -127,7 +127,7 @@ body.loaded {
   border-radius: 12px;
   padding: 4px;
   border: 1px solid var(--card-border);
-  margin-bottom: 20px;
+  margin-bottom: 24px;
 }
 
 .mode-btn {
@@ -272,9 +272,8 @@ body.loaded {
   align-items: center;
   justify-content: flex-start;
   flex-grow: 1;
-  gap: 16px;
   margin-top: 0;
-  padding-top: 4px;
+  padding-top: 0;
 }
 
 .test-card {
@@ -283,6 +282,8 @@ body.loaded {
   perspective: 1000px;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
+  margin-top: 0;
+  margin-bottom: 24px;
 }
 
 .card-inner {

@@ -50,8 +50,13 @@ const verbs = [
   { id: 48, english: "to arrive", russian: "прийти", pron: "[PREE-ee-tee]" },
   { id: 49, english: "to walk", russian: "ходить", pron: "[*AH-deet]" },
   { id: 50, english: "to notice", russian: "заметить", pron: "[zahm-YEH-tit]" },
-  { id: 51, english: "to read", russian: "читать", pron: "[chee-TAHT]" }
+  { id: 51, english: "to read", russian: "читать", pron: "[chee-TAHT]" },
+  { id: 52, english: "to eat", russian: "есть", pron: "[yehst]" },
+  { id: 53, english: "to drink", russian: "пить", pron: "[peet]" }
 ];
+
+// Exciting sharp SVG checkmark template
+const CHECK_SVG = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4.5" stroke-linecap="square" stroke-linejoin="miter" style="width: 1.1rem; height: 1.1rem; display: inline-block; vertical-align: middle;"><path d="M4 12l5 5L20 6" /></svg>`;
 
 // App State
 let currentTestIndex = 0;
@@ -183,7 +188,7 @@ function updateToggleUI(element, state) {
   } else {
     element.classList.remove("is-learned");
   }
-  element.textContent = "✔";
+  element.innerHTML = CHECK_SVG;
 }
 
 // Russian Number spelling translator
@@ -352,7 +357,7 @@ function initVerbsView() {
             🔊
           </a>
           <button class="learned-toggle ${isL ? 'is-learned' : ''}" style="padding: 8px 12px; pointer-events: none;">
-            ✔
+            ${CHECK_SVG}
           </button>
         </div>
       </div>
@@ -379,7 +384,7 @@ function initNumbersView() {
             🔊
           </a>
           <button class="learned-toggle ${isL ? 'is-learned' : ''}" style="padding: 8px 12px; pointer-events: none;">
-            ✔
+            ${CHECK_SVG}
           </button>
         </div>
       </div>
@@ -696,7 +701,7 @@ function performGlobalSearch(query) {
             🔊
           </a>
           <button class="learned-toggle ${isL ? 'is-learned' : ''}" style="padding: 8px 12px; pointer-events: none;">
-            ✔
+            ${CHECK_SVG}
           </button>
         </div>
       </div>
@@ -720,7 +725,7 @@ function performGlobalSearch(query) {
             🔊
           </a>
           <button class="learned-toggle ${isL ? 'is-learned' : ''}" style="padding: 8px 12px; pointer-events: none;">
-            ✔
+            ${CHECK_SVG}
           </button>
         </div>
       </div>
