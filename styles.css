@@ -512,6 +512,21 @@ body {
   z-index: 10;
 }
 
+.card-back .card-toggle {
+  right: 16px !important;
+  left: auto !important;
+  transform: none !important;
+}
+
+/* Prevent opposite face checkmark from bleeding through */
+.test-card.flipped .card-front .card-toggle {
+  display: none !important;
+}
+
+.test-card:not(.flipped) .card-back .card-toggle {
+  display: none !important;
+}
+
 .verb-actions {
   display: flex;
   align-items: center;

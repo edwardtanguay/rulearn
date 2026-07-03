@@ -83,6 +83,7 @@ const testExample = document.getElementById("test-example");
 const btnNextTest = document.getElementById("btn-next-test");
 const testVerbToggleFront = document.getElementById("test-verb-toggle-front");
 const testVerbToggleBack = document.getElementById("test-verb-toggle-back");
+const testVerbListenLink = document.getElementById("test-verb-listen-link");
 
 // DOM Elements - Numbers View
 const btnNumModeLearn = document.getElementById("btn-num-mode-learn");
@@ -274,7 +275,6 @@ numTestCard.addEventListener("click", () => {
   numTestCard.classList.toggle("flipped");
 });
 
-// Flashcard Toggle Event Handlers (prevent card flip click)
 [testVerbToggleFront, testVerbToggleBack].forEach(toggle => {
   toggle.addEventListener("click", (e) => {
     e.stopPropagation();
@@ -429,6 +429,10 @@ function loadTestVerb() {
   testCardLabel.textContent = `verb #${verb.id}`;
   testRussian.textContent = verb.russian;
   testPronunciation.textContent = verb.pron;
+  
+  if (testVerbListenLink) {
+    testVerbListenLink.href = getTranslateUrl(verb.russian);
+  }
 
   const isL = isLearned("verb", verb.id);
   updateToggleUI(testVerbToggleFront, isL);
