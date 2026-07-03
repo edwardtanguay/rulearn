@@ -138,10 +138,10 @@ function updateProgressSummary() {
   const numEl = document.getElementById("progress-numbers");
   const divider = document.querySelector(".progress-divider");
 
-  verbEl.textContent = `${learnedVerbsCount} of 50 learned`;
+  verbEl.textContent = `${learnedVerbsCount} of 50 verbs learned`;
   verbEl.style.color = `hsl(${verbHue}, 85%, 60%)`;
 
-  numEl.textContent = `${learnedNumsCount} of 100 learned`;
+  numEl.textContent = `${learnedNumsCount} of 100 numbers learned`;
   numEl.style.color = `hsl(${numHue}, 85%, 60%)`;
 
   // Show/Hide context-dependent items
